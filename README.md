@@ -17,6 +17,13 @@ These helpers restore a usable workflow without touching the upstream skill.
 
 ## Quick Start — geolocate a photo in ~3 minutes
 
+One-command version (sets up run dir, background intake, board and signboard
+crops in a single call, then prints the timed next steps):
+
+```bash
+bash gg_fast.sh photo.jpg run1
+```
+
 Assumes geo-sleuth is installed at `~/.workbuddy/skills/geo-sleuth`
 (see Prerequisites) and you have a photo, e.g. `photo.jpg`:
 
