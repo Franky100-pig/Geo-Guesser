@@ -15,6 +15,36 @@ the default Google/ESRI satellite sources and some engines are unreachable.
 
 These helpers restore a usable workflow without touching the upstream skill.
 
+## Quick Start — geolocate a photo in ~3 minutes
+
+Assumes geo-sleuth is installed at `~/.workbuddy/skills/geo-sleuth`
+(see Prerequisites) and you have a photo, e.g. `photo.jpg`:
+
+```bash
+# 1) start fast intake in the background (~60s; Baidu-only, no OCR)
+bash fast_intake.sh photo.jpg intake/ &
+
+# 2) while that runs, prep the candidate board + edge crops in parallel
+export CLAUDE_SKILL_DIR="$HOME/.workbuddy/skills/geo-sleuth"
+S="$CLAUDE_SKILL_DIR/scripts"; RUN=<your-run-dir>; cd "$RUN"
+uv run "$S/board.py" init --photo photo.jpg
+uv run "$S/board.py" country cn          # skip if unknown
+uv run "$S/imgprep.py" edges photo.jpg --out-dir edges/
+wait                                      # 3) intake/intake.md is ready
+
+# 4) read the Baidu vote + the contact sheet (intake/rev/photo_baidu_similar.jpg)
+#    -> for most CN photos this alone names the place at country/city/area level
+```
+
+Optional follow-ups (outside the 3-minute budget):
+
+```bash
+# verify road layout against a satellite mosaic
+uv run --with pillow amap_sat.py <lat> <lon> 18 2 sat.jpg
+# compose a shareable one-page evidence sheet
+uv run --with pillow evidence_sheet.py my_case.json evidence.jpg
+```
+
 ## What's inside
 
 | File | What it does |
