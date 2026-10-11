@@ -1,0 +1,26 @@
+{
+  "title": "geo-sleuth  |  Zhangjiajie National Forest Park, Wulingyuan, Hunan, China",
+  "base": ".",
+  "rows": [
+    {
+      "images": ["photo.jpg"],
+      "height": 690,
+      "caption": "INPUT: screenshot of a Chinese map-app video clip (1920x854, no EXIF). UI watermark 'uid:1898353 | v1.0.17 | China'."
+    },
+    {
+      "images": ["z_police.png", "z_center2.png", "edges_own/photo_top.jpg"],
+      "height": 300,
+      "caption": "LEFT: police car marked 公安 = mainland-China police livery. CENTRE: the two PURPLE coaches = Zhangjiajie park eco-shuttles (the operator states the park buses are purple). RIGHT: vertical quartz-sandstone pillars flank both sides of the road."
+    },
+    {
+      "images": ["intake/rev/photo_baidu_similar.jpg", "amap_nm18.jpg", "amap_srsm18.jpg"],
+      "height": 420,
+      "caption": "LEFT: Baidu reverse-image search - 90 near-duplicates from Zhangjiajie travel blogs (tagged 张家界国家森林公园 x2, 天门山景区道路 x1). CENTRE: Gaode/AMap satellite of the south gate (锣鼓塔) - wide Jinbian Rd plus a large vehicle lot. RIGHT: 水绕四门 - enclosed bowl valley with plaza."
+    }
+  ],
+  "footer": [
+    "CONCLUSION  mainland China -> Zhangjiajie, Hunan. Wulingyuan core scenic area / Zhangjiajie National Forest Park (quartz-sandstone peak forest).",
+    "TIER  country HIGH; city HIGH; area (park) HIGH. Exact road NOT pinned: Google/ESRI satellite unreachable from CN; Baidu street view has NO coverage inside the park; scene signs unreadable at this resolution.",
+    "CANDIDATE ROADS inside the park (unranked): south gate / 锣鼓塔 (金鞭路) area - 水绕四门 transfer hub - 金鞭溪 / 十里画廊 internal road."
+  ]
+}
