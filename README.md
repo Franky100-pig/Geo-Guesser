@@ -52,6 +52,22 @@ uv run --with pillow amap_sat.py <lat> <lon> 18 2 sat.jpg
 uv run --with pillow evidence_sheet.py my_case.json evidence.jpg
 ```
 
+## Scope: China lane vs worldwide lane
+
+| Tool | Scope | Notes |
+|---|---|---|
+| `gg_fast.sh` / `fast_intake.sh` | **CN lane** | baidu-only intake, no OCR; baidu is strongest for CN scenes |
+| `amap_sat.py` | **CN-only imagery** | overseas AMap tiles return a "no satellite imagery" placeholder (tested) |
+| `phone_lookup.py` | 🌍 **worldwide, offline** | libphonenumber geodata bundled; zero network, GFW-proof |
+| `sat_global.py` | 🌍 worldwide | ESRI/Google tiles; from CN set `GEO_PROXY` to your VPN |
+| `intake_global.sh` | 🌍 worldwide | all engines + OCR on; needs global reachability or `GEO_PROXY` |
+| `evidence_sheet.py` | 🌍 worldwide | pure local image compositing |
+
+**Rule of thumb:** CN photo → CN lane (`gg_fast.sh` + `amap_sat.py`).
+Anything else → worldwide lane (`intake_global.sh` + `sat_global.py`), with
+`GEO_PROXY` exported if you run from mainland China. `phone_lookup.py` and
+`evidence_sheet.py` help on both lanes.
+
 ## What's inside
 
 | File | What it does |
@@ -98,6 +114,23 @@ uv run --with pillow amap_sat.py 29.3454 110.4648 18 2 amap_srsm18.jpg
 ```bash
 uv run --with pillow evidence_sheet.py examples/zhangjiajie_evidence.json evidence.jpg
 # spec JSON: title, optional base dir, rows[{images,height,caption}], footer[]
+```
+
+### Worldwide mode
+
+```bash
+# 1) offline phone-number geolocation — the Pingyang trick, global edition:
+#    a sign hotline can pin the country AND city, no network needed
+uv run --with phonenumbers phone_lookup.py 13758466320 +33142685300
+#    -> 13758466320 = Wenzhou, Zhejiang; +33142685300 = Paris, France
+
+# 2) global satellite mosaic (ESRI default; add proxy from CN)
+GEO_PROXY=http://127.0.0.1:<port> uv run --with pillow sat_global.py 48.8584 2.2945 17 1 paris.jpg
+#    --dry-run verifies tile math offline; --provider google for the Google source
+
+# 3) full-engine intake for non-CN photos (OCR on, all engines)
+export GEO_PROXY=http://127.0.0.1:<port>   # only needed behind the GFW
+bash intake_global.sh paris.jpg run1       # extra args pass through to intake.py
 ```
 
 ## License
