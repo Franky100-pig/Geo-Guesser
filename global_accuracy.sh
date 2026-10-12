@@ -38,6 +38,7 @@ if [ $# -gt 0 ] && [[ "$1" != -* ]] && [ ! -e "$1" ]; then
 fi
 
 SKILL="${GEO_SLEUTH_SKILL:-$HOME/.workbuddy/skills/geo-sleuth}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 mkdir -p "$RUN"
 cp "$PHOTO" "$RUN/photo.jpg"
@@ -57,9 +58,37 @@ uv run "$SKILL/scripts/revimg.py" variants/*.jpg --out-dir rev_vars/ --engines b
 echo "== [4/4] board init =="
 uv run "$SKILL/scripts/board.py" init --photo photo.jpg 2>&1 | tail -1 || true
 
+echo "== [5/5] routing: script->region, sun/hemisphere, driving side =="
+OCR_SRC="ocr_fine.json"
+[ -s "$OCR_SRC" ] || OCR_SRC="intake/intake.json"
+if python3 "$SCRIPT_DIR/script_route.py" --ocr "$OCR_SRC" > routing.json 2>/dev/null && [ -s routing.json ]; then
+  echo "  script routing : $(python3 -c "import json,sys;d=json.load(open('routing.json'));print(d.get('routing_hint','?'))" 2>/dev/null || echo 'see routing.json')"
+else
+  echo "  script routing : no text extracted yet — re-run script_route.py after reading signs"
+fi
+if python3 "$SCRIPT_DIR/sun_hint.py" --exif intake/exif.json > sun_hint.json 2>/dev/null && [ -s sun_hint.json ]; then
+  python3 - <<'PY' 2>/dev/null || echo "  sun/hemisphere : see sun_hint.json"
+import json
+d = json.load(open("sun_hint.json"))
+if d.get("hemisphere"):
+    print(f"  sun/hemisphere : {d['hemisphere']} hemisphere, {d.get('latitude_band')}")
+    if d.get("verdict"):
+        print(f"                   {d['verdict']}")
+else:
+    print("  sun/hemisphere : no GPS/time in EXIF -> measure shadows manually (sun_hint.py --manual)")
+PY
+else
+  echo "  sun/hemisphere : exif empty (screenshots/forwarded images) — measure shadows manually"
+fi
+echo "  driving side   : which side does traffic keep to? (UK/JP/IN/AU/ID/KE=LEFT; rest=RIGHT)"
+echo "                   -> python3 $SCRIPT_DIR/driving_side.py --side left|right   (eliminates half the planet)"
+
 cat <<'SOP'
 
 == prep done. Now follow GLOBAL_ACCURACY_SOP.md (accuracy first, no clock) ==
+  0. ROUTE : read routing.json (script -> candidate regions) + sun_hint.json
+             (hemisphere/band) BEFORE deep reading; they cut the search space
+             first, then driving_side.py --side <observed> eliminates further
   1. READ  : photo.jpg, intake/edges/*, ocr_fine.json, each rev_vars/*_baidu.json
              + consult VISION_CLUES.md while reading
   2. TEXT  : any text found? -> phone_lookup.py (numbers)
@@ -71,6 +100,8 @@ cat <<'SOP'
 SOP
 
 echo "== file map =="
+echo "  routing.json                script->region routing (path 1)"
+echo "  sun_hint.json               hemisphere/band + shadow sanity check (path 5)"
 echo "  intake/intake.md            baidu vote + OCR + metadata"
 echo "  ocr_fine.json               fine-pass OCR text (small signage)"
 echo "  rev_vars/                   per-variant baidu guesses + contact sheets"
