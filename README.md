@@ -68,6 +68,24 @@ Anything else → worldwide lane (`intake_global.sh` + `sat_global.py`), with
 `GEO_PROXY` exported if you run from mainland China. `phone_lookup.py` and
 `evidence_sheet.py` help on both lanes.
 
+### Worldwide lane — measured reality (2026-10-12, from CN)
+
+Blind-tested on 4 photos (Paris street / Tokyo skyline / Morocco ksar /
+Mexico City Zocalo): **3/4 country, 2/4 city** — the worldwide lane is
+**half-usable** from this network. What the measurements showed:
+
+- `intake.py`'s default engines are **baidu + yandex** (not google/bing), and
+  **yandex is captcha-blocked on every variant** → baidu is the only working engine
+- Baidu covers **overseas landmark/postcard scenes** (Tokyo → "富士山与东京夜景",
+  Mexico City → "墨西哥城历史中心广场"×3) but **fails on ordinary foreign streets**
+  (Paris Montmartre → no place at all, only visual tags)
+- `sat_global.py` is unusable from CN without a working `GEO_PROXY`
+- CN lane, by contrast, is the reliable one on this network
+
+So treat the worldwide lane as a **best-effort first pass for famous scenes**;
+for ordinary street views, add manual visual analysis + web search on top.
+Full numbers: `CHINA_NETWORK_NOTES.md` ("Global lane measured").
+
 ## What's inside
 
 | File | What it does |
