@@ -42,6 +42,35 @@ engine it relies on (baidu) has no coverage of ordinary foreign streets, and the
 designed second engine (yandex) is captcha-walled. The CN lane is the reliable
 one from this network.
 
+### Engine availability probed (2026-10-12, round 2 — the accuracy hunt)
+
+"Add more reverse-image engines" was the first idea for fixing overseas
+accuracy. Measured, it is dead:
+
+| Engine | Result from this machine |
+|---|---|
+| Google Lens (upload, and by public URL via WebFetch) | timeout / fetch failed |
+| TinEye | timeout |
+| Mapillary (graph.mapillary.com) | timeout |
+| KartaView (api.openstreetcam.org) | timeout |
+| cn.bing.com visual-search upload | 404 (keyword search only) |
+| Yandex image search by URL (`rpt=imageview`) | "service is under construction" |
+| **Yandex WEB search via WebFetch** | **WORKS** — full results, no captcha; best text engine for foreign content |
+| **WebSearch / WebFetch (built-in, server-side)** | **WORKS** — source hunting, gallery captions |
+| `revimg.py --query --text-engines bing` | works, but cn.bing web search is weak on foreign proper nouns (returns dictionary entries for "rue") |
+| Stock-site fallback (vcg.com, from baidu's similar list) | security check, no location data |
+
+Rescue tactics measured on the Paris photo:
+- **Variant reverse search does NOT rescue**: baidu on flip/gray/up/wb variants
+  all returned the same visual-only tag ("石墙小巷" / "石墙街道"), no place name.
+- **Source hunt DOES**: the photo's origin gallery page captions it
+  "Rue de Ravignan: Montmartre Street" — a country-level FAIL becomes a
+  street-level hit in one WebFetch.
+
+Conclusion: overseas accuracy comes from **text search + source hunting +
+systematic agent vision**, not from more image engines. Speed is irrelevant on
+this lane — see `GLOBAL_ACCURACY_SOP.md`.
+
 ## Practical 3-minute path (country / city / area)
 
 1. `bash fast_intake.sh photo.jpg intake/ &`  (Baidu-only, ~60s, non-blocking)
