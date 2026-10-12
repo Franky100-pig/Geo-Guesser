@@ -40,20 +40,65 @@ fi
 SKILL="${GEO_SLEUTH_SKILL:-$HOME/.workbuddy/skills/geo-sleuth}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# --- Region profiles (speed optimization, measured v3) ----------------------
+# REGION=sea|eu|na|full|auto (default auto = decide from OCR text routing).
+# Rationale (v3 blind test + v2): baidu variant reverse search is high-yield
+# for SE/East Asia (Chinese travel blogs cover it) but near-zero for NA/EU
+# web photos, where source-hunt is the only real lever. Full profile keeps
+# every variant as the safe default for unknown photos.
+#   full : baidu on photo (intake) + flip + gray + wb   [most recall, slowest]
+#   sea  : baidu on photo (intake) + flip                (gray/wb redundant)
+#   eu/na: baidu on photo (intake) only                  (variants add ~40s
+#          of baidu calls that returned noise for every NA/EU photo so far)
+REGION="${REGION:-auto}"
+
+T_START=$(date +%s)
+step_time() { echo "   [$1] $(( $(date +%s) - $2 ))s"; }
+
 mkdir -p "$RUN"
 cp "$PHOTO" "$RUN/photo.jpg"
 cd "$RUN"
 
 echo "== [1/4] full intake (OCR on, baidu+yandex) =="
+t=$(date +%s)
 uv run "$SKILL/scripts/intake.py" photo.jpg --out-dir intake/ "$@" 2>&1 | tail -3 || true
+step_time intake "$t"
+
+if [ "$REGION" = "auto" ]; then
+  REGION=$(python3 "$SCRIPT_DIR/script_route.py" --ocr intake/intake.json 2>/dev/null | python3 -c "
+import json,sys
+try: d=json.load(sys.stdin)
+except Exception: print('full'); sys.exit()
+regs=' '.join(d.get('candidate_regions') or [])
+if any(k in regs for k in ('SE-Asia','South-Asia','East-Asia')): print('sea')
+elif 'Europe' in regs: print('eu')
+elif 'America' in regs: print('na')
+else: print('full')
+")
+fi
+case "$REGION" in
+  sea)   VARIANTS="variants/photo_flip.jpg" ;;
+  eu|na) VARIANTS="" ;;
+  *)     REGION=full; VARIANTS="variants/photo_flip.jpg variants/photo_gray.jpg variants/photo_wb.jpg" ;;
+esac
+echo "== region profile: $REGION (set REGION=sea|eu|na|full to override) =="
 
 echo "== [2/4] fine OCR pass (3x3 tiles, upscale 3) =="
+t=$(date +%s)
 uv run "$SKILL/scripts/ocr.py" photo.jpg --tiles 3x3 --upscale 3 \
   --out ocr_fine.json --draw ocr_fine.png 2>&1 | tail -2 || true
+step_time fine-ocr "$t"
 
-echo "== [3/4] variants + baidu reverse search on each =="
+echo "== [3/4] variants + baidu reverse search ($REGION profile) =="
+t=$(date +%s)
 uv run "$SKILL/scripts/imgprep.py" variants photo.jpg --out-dir variants/ 2>&1 | tail -1 || true
-uv run "$SKILL/scripts/revimg.py" variants/*.jpg --out-dir rev_vars/ --engines baidu 2>&1 | tail -3 || true
+if [ -n "$VARIANTS" ]; then
+  # shellcheck disable=SC2086
+  uv run "$SKILL/scripts/revimg.py" $VARIANTS --out-dir rev_vars/ --engines baidu 2>&1 | tail -3 || true
+else
+  echo "   skipped variant reverse search ($REGION profile: baidu variants are noise here)"
+fi
+step_time variants+rev "$t"
 
 echo "== [4/4] board init =="
 uv run "$SKILL/scripts/board.py" init --photo photo.jpg 2>&1 | tail -1 || true
@@ -95,6 +140,8 @@ cat <<'SOP'
              -> WebSearch / Yandex-text (WebFetch) / revimg.py --query bing
   3. SOURCE: any URL / filename / watermark / EXIF hint?
              -> WebSearch + WebFetch the source page; captions name places
+             -> python3 $SCRIPT_DIR/pin_title_mine.py .   (mines rev source
+                page titles for place names, ~30s, often the fastest hit)
   4. VERIFY: hypothesis -> poi.py (OSM/so.com) + sat_global.py (needs GEO_PROXY)
   5. RECORD: board.py clue/add/rank/report + evidence_sheet.py
 SOP
@@ -107,3 +154,5 @@ echo "  ocr_fine.json               fine-pass OCR text (small signage)"
 echo "  rev_vars/                   per-variant baidu guesses + contact sheets"
 echo "  variants/                   flip/gray/up/wb search variants"
 echo "  board.json                  evidence board"
+echo ""
+echo "== total prep time: $(( $(date +%s) - T_START ))s (region=$REGION) =="
