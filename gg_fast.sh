@@ -47,6 +47,8 @@ echo "intake  : pid $INTAKE_PID (~55s, log intake.log)"
 echo "crops   : z_sign_right.png  z_sign_left.png  edges/"
 echo
 echo "NEXT (agent SOP):"
+echo "  T+5s   FIRST ANSWER (see FIRST_ANSWER.md): glance at photo.jpg 10s ->"
+echo "           declare country/city + confidence + one-line why, write it down"
 echo "  T+15s  Read z_sign_right.png / z_sign_left.png -> extract any phone numbers + addresses"
 echo "  T+20s  Fire ALL verification searches in ONE parallel batch:"
 echo "           - '<full phone number>'            (business listing)"

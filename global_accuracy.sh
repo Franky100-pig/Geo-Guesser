@@ -131,6 +131,10 @@ echo "                   -> python3 $SCRIPT_DIR/driving_side.py --side left|righ
 cat <<'SOP'
 
 == prep done. Now follow GLOBAL_ACCURACY_SOP.md (accuracy first, no clock) ==
+  -1. FIRST ANSWER (T+0, FIRST_ANSWER.md): you already did the 10s glance
+             when the photo arrived -> country/city + confidence + one-line
+             why, written down. Every step below classifies new evidence as
+             confirms / refines / overturns (record what overturned it).
   0. ROUTE : read routing.json (script -> candidate regions) + sun_hint.json
              (hemisphere/band) BEFORE deep reading; they cut the search space
              first, then driving_side.py --side <observed> eliminates further
