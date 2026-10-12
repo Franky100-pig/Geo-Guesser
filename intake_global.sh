@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
-# intake_global.sh — full-engine intake for NON-China photos.
+# intake_global.sh — full-engine intake lane for NON-China photos.
 #
 # Counterpart of gg_fast.sh (which is the CN lane: baidu-only, no OCR).
 # For photos taken outside China:
 #   - keep OCR on: latin/other signage text is far more informative than the
 #     CN-UI-only text that made us disable it in the CN lane
-#   - use ALL reverse-image engines (google lens / yandex / bing are much
-#     stronger than baidu outside China)
-#   - from a CN machine the global engines usually need a proxy:
-#       export GEO_PROXY=http://127.0.0.1:<port>   # your VPN's http proxy
+#   - MEASURED 2026-10-12 (see CHINA_NETWORK_NOTES.md): intake.py's default
+#     engines are actually **baidu + yandex** (not google/bing). Yandex is
+#     captcha-blocked on every variant from CN, so the working engine is
+#     baidu alone. Baidu covers overseas landmark/postcard scenes well
+#     (Tokyo skyline, Mexico City Zocalo, Morocco ksar) but NOT ordinary
+#     foreign street views (Paris Montmartre failed at country level).
+#   - satellite confirmation (sat_global.py, ESRI/Google) needs a working
+#     proxy from CN: export GEO_PROXY=http://127.0.0.1:<port> before running.
 #     intake.py inherits the env var automatically.
+#   - If baidu's vote is a bare visual description with no place name, do not
+#     trust the lane: fall back to manual visual analysis + web search.
 #
 # Usage:
 #   bash intake_global.sh <photo> [run_dir] [extra intake.py args...]
