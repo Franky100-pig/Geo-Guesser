@@ -90,9 +90,16 @@ Full numbers: `CHINA_NETWORK_NOTES.md` ("Global lane measured").
 
 | File | What it does |
 |---|---|
-| `amap_sat.py` | Stitch **AMap (Gaode)** satellite tiles into a mosaic. AMap is reachable from CN and replaces the blocked Google/ESRI source. Handles WGS84→GCJ-02. |
-| `evidence_sheet.py` | Compose an evidence image (grid of crops + captions + conclusion) from a JSON spec — reusable across cases. |
+| `gg_fast.sh` | One-command CN fast lane: run dir + background baidu intake + board + crops, prints a timed SOP. |
 | `fast_intake.sh` | Run `intake.py` **Baidu-only, no OCR, in the background** (~60s instead of ~190s). |
+| `amap_sat.py` | Stitch **AMap (Gaode)** satellite tiles into a mosaic. AMap is reachable from CN and replaces the blocked Google/ESRI source. Handles WGS84→GCJ-02. |
+| `phone_lookup.py` | **Offline worldwide phone-number geolocation** (libphonenumber). Numbers on signs/graffiti pin country + city with zero network. |
+| `sat_global.py` | Global satellite mosaic (ESRI/Google) for outside China, with `GEO_PROXY` support and `--dry-run` tile-math verification. |
+| `global_accuracy.sh` | Accuracy-first worldwide lane: full intake (OCR on) + fine OCR pass + baidu reverse search on every variant. |
+| `intake_global.sh` | Thin full-engine intake wrapper for non-CN photos (kept for ad-hoc use). |
+| `GLOBAL_ACCURACY_SOP.md` | Agent playbook for overseas photos: engine map, text-first / source-hunt / verify order, photo-type decision table. |
+| `VISION_CLUES.md` | Systematic reading checklist (script, driving side, plates, architecture, street furniture…) for the agent's own eyes. |
+| `evidence_sheet.py` | Compose an evidence image (grid of crops + captions + conclusion) from a JSON spec — reusable across cases. |
 | `CHINA_NETWORK_NOTES.md` | Measured network constraints and the 3-minute workflow. |
 | `examples/zhangjiajie_evidence.json` | Example `evidence_sheet.py` spec from a real Zhangjiajie run. |
 
@@ -134,22 +141,35 @@ uv run --with pillow evidence_sheet.py examples/zhangjiajie_evidence.json eviden
 # spec JSON: title, optional base dir, rows[{images,height,caption}], footer[]
 ```
 
-### Worldwide mode
+### Worldwide mode (accuracy first — no clock)
 
 ```bash
-# 1) offline phone-number geolocation — the Pingyang trick, global edition:
-#    a sign hotline can pin the country AND city, no network needed
+# 1) prep: full intake (OCR on) + fine OCR pass (3x3 tiles, 3x upscale)
+#    + baidu reverse search on EVERY variant (crop/flip/gray/wb)
+#    ~3-6 min; run in background
+bash global_accuracy.sh paris.jpg run_paris
+
+# 2) then follow GLOBAL_ACCURACY_SOP.md, in this order:
+#    - READ everything; walk VISION_CLUES.md while looking at the photo
+#    - TEXT first: phone_lookup.py for numbers (offline, instant);
+#      WebSearch / Yandex-text-via-WebFetch for names (both work from CN)
+#    - SOURCE hunt: any URL / filename / watermark / EXIF hint ->
+#      WebFetch the source page; captions name places. This single step
+#      turned the Paris blind test from country-level FAIL into a
+#      street-level hit.
+#    - VERIFY: poi.py + sat_global.py (needs GEO_PROXY) / amap_sat.py (CN)
+
+# 3) offline phone-number geolocation (both lanes)
 uv run --with phonenumbers phone_lookup.py 13758466320 +33142685300
-#    -> 13758466320 = Wenzhou, Zhejiang; +33142685300 = Paris, France
 
-# 2) global satellite mosaic (ESRI default; add proxy from CN)
+# 4) global satellite mosaic (ESRI default; add proxy from CN)
 GEO_PROXY=http://127.0.0.1:<port> uv run --with pillow sat_global.py 48.8584 2.2945 17 1 paris.jpg
-#    --dry-run verifies tile math offline; --provider google for the Google source
-
-# 3) full-engine intake for non-CN photos (OCR on, all engines)
-export GEO_PROXY=http://127.0.0.1:<port>   # only needed behind the GFW
-bash intake_global.sh paris.jpg run1       # extra args pass through to intake.py
 ```
+
+Why this shape: measured from CN, no additional image engine is reachable
+(google lens / yandex-reverse / tineye / mapillary all dead). Overseas
+accuracy therefore comes from **text search + source hunting + systematic
+agent vision**, not from more reverse-image engines.
 
 ## License
 
