@@ -21,6 +21,27 @@ are the constraints that shaped the helpers in this repo.
 - **Baidu reverse image search only** — gives the location for most CN photos via
   near-duplicate travel-blog images. Use `fast_intake.sh` (Baidu-only, no OCR).
 
+## Global lane measured (2026-10-12, 4 photos: Paris/Tokyo/Morocco/Mexico)
+
+Measured with `intake_global.sh` on the same machine. Results:
+
+| Component | Measured status | Detail |
+|---|---|---|
+| `intake.py` default engines | **baidu + yandex only** | NOT google/bing — the wrapper comment was wrong; `--engines baidu,yandex` is the actual default set |
+| Yandex reverse search | **ALL captcha-blocked** | every variant of every test photo returned "upload input not found (possibly asked for verification)" |
+| Google satellite tiles | **timeout** | same as CN lane |
+| ESRI World Imagery (`sat_global.py` default) | **timeout without GEO_PROXY** | global sat step is unusable from CN unless a proxy works |
+| Baidu reverse search (overseas photos) | **works, but scene-dependent** | see below |
+
+Baidu's overseas capability profile (the only working engine):
+- **Works**: overseas landmark / postcard scenes (Tokyo skyline -> "富士山与东京夜景" + source pages naming 日本东京; Mexico City Zocalo -> "墨西哥城历史中心广场" x3 + Wanderlog source "墨西哥城主教座堂, 墨西哥"; Morocco ksar -> "舍夫沙万"/"摩洛哥古城" + ctrip source naming 阿伊特本哈杜)
+- **Fails**: ordinary foreign street views (Paris Montmartre -> tags degraded to visual descriptions "石砌老街巷", no country/city at all) — Chinese web has no near-duplicates of such scenes
+
+Verdict: global lane is **half-usable** — 3/4 country, 2/4 city on this set, but the
+engine it relies on (baidu) has no coverage of ordinary foreign streets, and the
+designed second engine (yandex) is captcha-walled. The CN lane is the reliable
+one from this network.
+
 ## Practical 3-minute path (country / city / area)
 
 1. `bash fast_intake.sh photo.jpg intake/ &`  (Baidu-only, ~60s, non-blocking)
