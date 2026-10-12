@@ -102,6 +102,24 @@ Read the `from` list of every variant JSON, not only the guessed tag.
 `board.py report` + `evidence_sheet.py` composite. State the confidence
 per level (country / city / spot) and what evidence supports each.
 
+## Speed — region profiles (measured 2026-10-12, v3)
+
+Accuracy first, but the prep is now profile-aware so NA/EU photos stop paying
+for baidu variants that never pay off there:
+
+| Profile | baidu reverse | prep/photo | use for |
+|---|---|---|---|
+| `full` (auto default) | photo + flip + gray + wb | ~105s | unknown photo, non-Latin script |
+| `sea` | photo + flip | ~80s | SEA / East / South Asia |
+| `eu` / `na` | photo only | ~61–64s | Europe / Americas |
+
+`REGION=eu bash global_accuracy.sh photo.jpg run1` (auto is conservative on
+purpose: Latin-only text cannot split Europe from the Americas — set the
+profile yourself after one look). Batches: `gg_prep_batch.sh --stagger 8 *.jpg`
+(staggered launches keep baidu captcha away; 2 photos ≈ 72s wall).
+Fastest accuracy lever after prep: `python3 pin_title_mine.py .` (~30s,
+see step 3a).
+
 ## Which path for which photo
 
 | Photo type | Primary path | Backup |

@@ -61,6 +61,10 @@ uv run --with pillow evidence_sheet.py my_case.json evidence.jpg
 | `phone_lookup.py` | 🌍 **worldwide, offline** | libphonenumber geodata bundled; zero network, GFW-proof |
 | `sat_global.py` | 🌍 worldwide | ESRI/Google tiles; from CN set `GEO_PROXY` to your VPN |
 | `intake_global.sh` | 🌍 worldwide | all engines + OCR on; needs global reachability or `GEO_PROXY` |
+| `global_accuracy.sh` | 🌍 worldwide | accuracy-first prep lane + SOP (CN/OV split), `REGION` speed profiles |
+| `script_route.py` / `driving_side.py` / `sun_hint.py` | 🌍 worldwide | step-0 region eliminators (script / traffic side / hemisphere) |
+| `pin_title_mine.py` | 🌍 worldwide | mines baidu rev-search source pages for place names (~30s) |
+| `gg_prep_batch.sh` | 🌍 worldwide | staggered parallel preps for a batch of photos |
 | `evidence_sheet.py` | 🌍 worldwide | pure local image compositing |
 
 **Rule of thumb:** CN photo → CN lane (`gg_fast.sh` + `amap_sat.py`).
@@ -95,6 +99,31 @@ KartaView, cn.bing visual upload, Yandex image search, variant baidu rescue,
 server-side WebSearch/WebFetch, source hunting, systematic agent vision.**
 Full numbers: `CHINA_NETWORK_NOTES.md` ("Engine availability probed",
 "Global lane retest").
+
+### Overseas lane — speed (measured 2026-10-12, v3)
+
+`global_accuracy.sh` now takes region **speed profiles** — baidu variant
+reverse search pays off for SE/East Asia (Chinese travel blogs cover it) but
+returned noise for every NA/EU photo so far, so the variants are cut there:
+
+| Profile | baidu reverse on | prep time/photo | when |
+|---|---|---|---|
+| `full` (auto default) | photo + flip + gray + wb | ~105s | unknown photo, non-Latin script |
+| `sea` | photo + flip | ~80s | SEA/East/South Asia |
+| `eu` / `na` | photo only | **~61–64s** | Europe / Americas |
+
+```bash
+# one photo, forced profile
+REGION=eu bash global_accuracy.sh photo.jpg run_eu
+
+# batch: staggered parallel preps (2 photos: 72s wall total)
+REGION=sea bash gg_prep_batch.sh --stagger 8 *.jpg
+```
+
+After prep, the fastest accuracy lever is usually `pin_title_mine.py .`
+(mines the baidu source-page titles for place names, ~30s). Auto-routing is
+deliberately conservative: text-only routing cannot split Europe from the
+Americas, so set `REGION` yourself after a 5-second look at the photo.
 
 ## What's inside
 
