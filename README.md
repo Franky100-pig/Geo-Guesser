@@ -17,6 +17,11 @@ These helpers restore a usable workflow without touching the upstream skill.
 
 ## Quick Start — geolocate a photo in ~3 minutes
 
+**Answering protocol (both lanes):** every photo gets a **first answer within
+~10 seconds of seeing it** — country/city + confidence + one-line why — before
+any prep output is read; later evidence then confirms / refines / overturns it
+with the chain kept visible. Protocol: `FIRST_ANSWER.md`.
+
 One-command version (sets up run dir, background intake, board and signboard
 crops in a single call, then prints the timed next steps):
 
@@ -137,6 +142,7 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 | `global_accuracy.sh` | Accuracy-first worldwide lane: full intake (OCR on) + fine OCR pass + baidu reverse search on every variant. |
 | `intake_global.sh` | Thin full-engine intake wrapper for non-CN photos (kept for ad-hoc use). |
 | `GLOBAL_ACCURACY_SOP.md` | Agent playbook for overseas photos: engine map, text-first / source-hunt / verify order, photo-type decision table. |
+| `FIRST_ANSWER.md` | Answering protocol: declare a first answer in ~10s, then refine with a visible confirms/refines/overturns chain. |
 | `VISION_CLUES.md` | Systematic reading checklist (script, driving side, plates, architecture, street furniture…) for the agent's own eyes. |
 | `evidence_sheet.py` | Compose an evidence image (grid of crops + captions + conclusion) from a JSON spec — reusable across cases. |
 | `CHINA_NETWORK_NOTES.md` | Measured network constraints and the 3-minute workflow. |
