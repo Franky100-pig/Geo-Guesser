@@ -29,7 +29,7 @@ Honest ceiling: for **text-less foreign street views** (no signs, no plates, no 
 
 ## Optimization paths (ranked by leverage-per-effort)
 
-### 1. Multi-script text → region routing + foreign OCR hardening  ⭐ highest leverage
+### 1. Multi-script text → region routing + foreign OCR hardening  ⭐ highest leverage — **IMPLEMENTED** (`script_route.py`)
 - **What:** Detect the writing system in the photo (Cyrillic → RU/E.Europe; Arabic → MENA; Devanagari → India; Hangul → Korea; Katakana → Japan; Latin w/ diacritics → Europe; Thai/Lao/Khmer → SE Asia) and use it to (a) pre-filter candidate regions and (b) pick the correct OCR language for `poi.py`/`fine-OCR`.
 - **Why:** It is the cheapest possible "first cut." One script read can eliminate 90% of the planet before any search runs.
 - **Effort:** Low–Medium. Tie into `intake_global.sh` (currently OCR-on but language-agnostic).
@@ -53,13 +53,13 @@ Honest ceiling: for **text-less foreign street views** (no signs, no plates, no 
 - **Effort:** Low (writing + a few reference links each).
 - **Expected gain:** converts "I think it's Europe" into "it's X because of plate shape."
 
-### 4. Automated region-elimination scoring
+### 4. Automated region-elimination scoring — **driving-side eliminator IMPLEMENTED** (`driving_side.py`); full matrix still open
 - **What:** Turn `board.py` from manual into a scored elimination matrix: driving side (left/right from dashcam position), hemisphere/sun-angle, climate vegetation, pole style, script — each clue votes for/against a region with a weight; bottom region is dropped automatically.
 - **Why:** Removes the agent's inconsistent manual elimination and makes the reasoning reproducible.
 - **Effort:** Medium.
 - **Expected gain:** steadier city/spot accuracy, less variance run-to-run.
 
-### 5. Hemisphere / sun-angle + climate narrowing
+### 5. Hemisphere / sun-angle + climate narrowing — **IMPLEMENTED** (`sun_hint.py`, wraps geo-sleuth `sun.py`)
 - **What:** From shadow direction + a sun-position calc (date/time if EXIF, else rough), infer hemisphere and latitude band; cross-check against vegetation/pavement wetness.
 - **Why:** Cheap, decisive continent-level filter that also disambiguates mirror-image latitudes.
 - **Effort:** Low–Medium.
@@ -86,8 +86,11 @@ Honest ceiling: for **text-less foreign street views** (no signs, no plates, no 
 ## Suggested roadmap
 
 1. Paths **1, 3, 7, 8** first — all Low/Medium, compound quickly, and 8 makes the rest measurable.
+   → **1 done** (`script_route.py`, wired into `global_accuracy.sh` step 5),
+   → **driving-side eliminator done** (`driving_side.py`, part of 4),
+   → **5 done** (`sun_hint.py`).
 2. Then **2** (proxy/paid reverse-image) to attack the missing spot-level.
-3. **4, 5** as the "steady-state" accuracy floor.
+3. **4** (full scored matrix), **7, 8** as the "steady-state" accuracy floor.
 4. **6** only if text-less street views turn out to be a common, high-value case — it's the expensive one.
 
 ## Non-goals

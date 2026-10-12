@@ -27,6 +27,20 @@ engines — it comes from **text search + source hunting + agent vision**.
 
 ## The workflow (do all steps; they are cheap and independent)
 
+### Step 0 — Cut the search space first (routing, `global_accuracy.sh` step 5)
+Before deep reading, apply the three cheap eliminators (output already in
+`routing.json` / `sun_hint.json`):
+- **`script_route.py --ocr ocr_fine.json`** — writing system on any sign →
+  candidate regions + the right OCR languages for a re-run (Cyrillic →
+  RU/E.Europe, Arabic → MENA, kana → Japan, Devanagari → India…). One script
+  read can eliminate 90% of the planet.
+- **`sun_hint.py --exif intake/exif.json`** — hemisphere + latitude band from
+  GPS/time; with a measured shadow bearing it also sanity-checks whether the
+  EXIF is trustworthy. No GPS? `sun_hint.py --manual` tells you what to measure.
+- **`driving_side.py --side left|right`** — once you can see which side traffic
+  keeps to, this eliminates half the planet (LHT set: UK/IE/JP/IN/TH/ID/AU/NZ/KE/ZA…).
+Never let a single one of these decide alone — combine two before committing.
+
 ### Step 1 — Read everything the prep produced
 `photo.jpg`, `intake/edges/*` (four edges + corners), `ocr_fine.json`,
 and **every** `rev_vars/*_baidu.json` vote + contact sheet. While reading,

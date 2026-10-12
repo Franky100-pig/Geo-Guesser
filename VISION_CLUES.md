@@ -7,15 +7,29 @@ versions of many of these live in the geo-sleuth skill's
 
 ## First pass — whole frame, ~10 seconds
 
-| Clue | What it tells you |
-|---|---|
-| Script / writing system on any sign | language family: latin, cyrillic, arabic, devanagari, han, kana, hangul, thai… |
-| Driving side (steering wheel / driver position) | ~75 countries drive on the left; splits e.g. UK/JP/IN/AU vs mainland |
-| License plate format + color | EU blue strip, US/CA plain white, JP white+green, CN blue… |
-| Road center line color | yellow → US/Canada (most of the world is white) |
-| Sun / shadow direction | hemisphere + rough latitude + time of day |
-| Vegetation | palms → tropical/arid; conifers → temperate/cold; dense broadleaf → humid subtropical |
-| Skyline / terrain | mountains, coast, plain, density of high-rises |
+| Clue | What it tells you | Tool |
+|---|---|---|
+| Script / writing system on any sign | language family: latin, cyrillic, arabic, devanagari, han, kana, hangul, thai… | `script_route.py --ocr ocr_fine.json` |
+| Driving side (steering wheel / driver position) | ~75 countries drive on the left; splits e.g. UK/JP/IN/AU vs mainland | `driving_side.py --side left\|right` |
+| License plate format + color | EU blue strip, US/CA plain white, JP white+green, CN blue… | (manual) |
+| Road center line color | yellow → US/Canada (most of the world is white) | (manual) |
+| Sun / shadow direction | hemisphere + rough latitude + time of day | `sun_hint.py --exif intake/exif.json` |
+| Vegetation | palms → tropical/arid; conifers → temperate/cold; dense broadleaf → humid subtropical | (manual) |
+| Skyline / terrain | mountains, coast, plain, density of high-rises | (manual) |
+
+### Reading the sun without EXIF (no GPS/time available)
+- Shadow points **south** around midday → northern hemisphere; points **north** → southern.
+- Very long shadows at midday → high latitude; sun near zenith → tropics.
+- Which walls are lit vs shaded constrains the camera heading (`sun.py facing`).
+- Measure a shadow bearing + use the capture time → `sun_hint.py` runs
+  `sun.py locate` over a world bbox and returns the matching latitude bands.
+
+### Reading the driving side without seeing the steering wheel
+- Parked cars: which side of the road do they nose into?
+- A passing bus/truck on the far carriageway shows the driver-seat side.
+- Which side of the windshield are the wipers/mirrors mounted (left vs right)?
+- Roundabout circulation direction (clockwise → LHT) — but roundabouts are rare
+  in North America/China, common in UK/France/AU.
 
 ## Signage & text — the money clues
 
