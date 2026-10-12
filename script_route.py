@@ -8,7 +8,7 @@
 Cheapest possible "first cut": read the scripts present in any extracted text and
 use them to (a) pre-filter candidate regions and (b) pick the correct OCR language
 for a re-run of ocr.py. No network, no OCR engine required — it only needs the
-text that intake_global.sh already produced in intake/ocr.json.
+text that the global lane already produced in intake/ocr.json.
 
 Unicode-range detection (no external libs) covers the high-value scripts:
   Cyrillic, Arabic/Persian, Devanagari, Hangul, Japanese kana, Thai, Lao, Khmer,
@@ -201,7 +201,7 @@ def route(text: str) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ocr", help="intake/ocr.json produced by intake_global.sh")
+    ap.add_argument("--ocr", help="intake/ocr.json produced by the global lane")
     ap.add_argument("--file", help="plain text file")
     ap.add_argument("--text", help="inline text")
     args = ap.parse_args()

@@ -32,7 +32,7 @@ Honest ceiling: for **text-less foreign street views** (no signs, no plates, no 
 ### 1. Multi-script text → region routing + foreign OCR hardening  ⭐ highest leverage — **IMPLEMENTED** (`script_route.py`)
 - **What:** Detect the writing system in the photo (Cyrillic → RU/E.Europe; Arabic → MENA; Devanagari → India; Hangul → Korea; Katakana → Japan; Latin w/ diacritics → Europe; Thai/Lao/Khmer → SE Asia) and use it to (a) pre-filter candidate regions and (b) pick the correct OCR language for `poi.py`/`fine-OCR`.
 - **Why:** It is the cheapest possible "first cut." One script read can eliminate 90% of the planet before any search runs.
-- **Effort:** Low–Medium. Tie into `intake_global.sh` (currently OCR-on but language-agnostic).
+- **Effort:** Low–Medium. Tie into `global_accuracy.sh` (currently OCR-on but language-agnostic).
 - **Expected gain:** fewer false regions, faster correct routing; likely lifts *city* toward 4/4 on sign-bearing photos.
 
 ### 2. Reverse-image recovery via proxy + paid search APIs

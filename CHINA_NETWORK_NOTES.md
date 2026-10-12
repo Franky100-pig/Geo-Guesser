@@ -19,11 +19,12 @@ are the constraints that shaped the helpers in this repo.
 - **AMap (Gaode) satellite tiles** — reachable directly. `amap_sat.py` stitches them.
   AMap uses GCJ-02, so the script converts WGS84 -> GCJ-02 first.
 - **Baidu reverse image search only** — gives the location for most CN photos via
-  near-duplicate travel-blog images. Use `fast_intake.sh` (Baidu-only, no OCR).
+  near-duplicate travel-blog images. Run `intake.py --no-ocr --engines baidu`
+  (what `gg_fast.sh` does inline).
 
 ## Global lane measured (2026-10-12, 4 photos: Paris/Tokyo/Morocco/Mexico)
 
-Measured with `intake_global.sh` on the same machine. Results:
+Measured with `global_accuracy.sh` on the same machine. Results:
 
 | Component | Measured status | Detail |
 |---|---|---|
@@ -92,7 +93,8 @@ Additional measured findings from the retest:
 
 ## Practical 3-minute path (country / city / area)
 
-1. `bash fast_intake.sh photo.jpg intake/ &`  (Baidu-only, ~60s, non-blocking)
+1. `uv run "$S/intake.py" photo.jpg --out-dir intake/ --no-ocr --engines baidu &`
+   (Baidu-only, ~60s, non-blocking)
 2. Meanwhile: `board.py init`, `board.py country cn`, `imgprep.py edges`
 3. Read `intake/intake.md` vote count + open `rev/*_baidu_similar.jpg`
 4. Conclude. Exact-road refinement needs Google z18 imagery or street view,
