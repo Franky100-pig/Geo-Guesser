@@ -2,7 +2,7 @@
 
 4 fresh web photos (Openverse/Flickr, EXIF stripped, truth sealed in a file
 during the run). New tools in the loop: `script_route.py`, `sun_hint.py`,
-`driving_side.py` (SOP step 0) + the SOP source-hunt additions.
+`driving_side.py` (SOP step 0.5) + the SOP source-hunt additions.
 
 ## Score
 

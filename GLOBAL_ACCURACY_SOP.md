@@ -27,7 +27,19 @@ engines — it comes from **text search + source hunting + agent vision**.
 
 ## The workflow (do all steps; they are cheap and independent)
 
-### Step 0 — Cut the search space first (routing, `global_accuracy.sh` step 5)
+### Step 0 — First answer, T+0 (before prep output is even read)
+~10-second glance at `photo.jpg` and declare, per `FIRST_ANSWER.md`:
+```
+First answer: <country> / <city-or-region>  (confidence: low|medium|high)
+Why: <one line, strongest visible clue>
+```
+Allowed inputs for this glance: script, driving side, vegetation, plates,
+architecture, sun angle — nothing that needs a search or a crop. Write it to
+`FIRST_ANSWER.md` (or `board.py clue add --level guess`) so every later step
+has to beat it. Then the refinement loop classifies each new evidence item as
+confirms / refines / overturns (record what overturned it).
+
+### Step 0.5 — Cut the search space first (routing, `global_accuracy.sh` step 5)
 Before deep reading, apply the three cheap eliminators (output already in
 `routing.json` / `sun_hint.json`):
 - **`script_route.py --ocr ocr_fine.json`** — writing system on any sign →
