@@ -65,6 +65,33 @@ EXIF, or "I downloaded it from somewhere" — turns the problem into a
   "Rue de Ravignan: Montmartre Street" → country-level FAIL becomes
   **street-level hit** in one fetch.
 
+#### 3a. Pin-title mining (v3-verified, cheap and high yield)
+Baidu reverse search often finds near-duplicates on Chinese pinboard sites
+(huaban.com, duitang.com, meipian.cn). These pins carry the ORIGINAL photo
+title, which usually names the place — even when the engine tag itself is a
+useless generic label (鱼市场/城市街道).
+- For EVERY near-duplicate cell in `rev/*_baidu_similar.jpg`, take `similar[i].from`
+  from the JSON and WebFetch it; read the pin/album title.
+- Worked example (v3 q1): engine tag only「图中可能是鱼市场」→ near-dup duitang
+  pin titled「缅甸莱茵湖鱼市场」→ Myanmar · Inle Lake in one fetch.
+
+#### 3b. Watermark → photographer profile (v3-verified)
+A faint watermark (corner, 2021-style, `name © year`) is a person lookup, not
+a place lookup — use it indirectly:
+- OCR/zoom the corner strip (`imgprep.py zoom` on the bottom band)
+- WebSearch the name + platform guesses (Flickr / Wikimedia Commons). A hit on
+  the person's gallery/geo area tells you where they shoot (v3 q4: "Steven R.
+  Barringer" → Commons contributor of Taiwan → country confirmed without text).
+- Commons is scriptable from CN via proxy:
+  `commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6...`
+  (XHS/Flickr pages often need login/JS — skip those, do not fight them).
+
+#### 3c. Variant hits can name cities in their titles (v3-verified)
+A variant (flip/gray/wb) reverse hit may land on an article whose TITLE names
+the city even when no near-duplicate exists (v3 q2: flip-variant hit on a
+xiaohongshu post titled「西班牙小岛 Palma de Mallorca」→ city confirmed).
+Read the `from` list of every variant JSON, not only the guessed tag.
+
 ### Step 4 — Verify the hypothesis (never skip)
 - `poi.py "<name>"` for coordinates (OSM Nominatim / so.com)
 - `sat_global.py lat lon` with `GEO_PROXY` for satellite confirmation;

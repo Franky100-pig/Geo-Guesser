@@ -84,3 +84,16 @@ versions of many of these live in the geo-sleuth skill's
    not the description.
 3. Verify every hypothesis with `poi.py` + satellite (`sat_global.py` with
    `GEO_PROXY`, or `amap_sat.py` in China) before reporting.
+
+## Bias trap: the China-lookalike anchor (v3 blind-test finding)
+
+Baidu reverse search is trained on Chinese image corpora: for a foreign street
+that "looks like a Chinese tenement block" it returns 90 Chinese housing-estate
+near-misses with generic tags (城市街道 / 老旧居民区街景) and zero true
+near-duplicates (v3 q3: Manila street matched Kunming/Fuzhou/Dalian estates).
+Rules:
+- If contact-sheet cells are "same style, different scene", the engine vote is
+  NOT evidence — treat it as noise and lean on hard discriminators instead:
+  vehicles (pedicab sidecars → PH), utility poles, plate colors, scripts.
+- Never let the CN-lookalike override a regional eliminator result
+  (driving side, script, vegetation).
