@@ -33,12 +33,15 @@ Assumes geo-sleuth is installed at `~/.workbuddy/skills/geo-sleuth`
 (see Prerequisites) and you have a photo, e.g. `photo.jpg`:
 
 ```bash
+# 0) point at the geo-sleuth skill
+export CLAUDE_SKILL_DIR="$HOME/.workbuddy/skills/geo-sleuth"
+S="$CLAUDE_SKILL_DIR/scripts"
+
 # 1) start fast intake in the background (~60s; Baidu-only, no OCR)
-bash fast_intake.sh photo.jpg intake/ &
+uv run "$S/intake.py" photo.jpg --out-dir intake/ --no-ocr --engines baidu &
 
 # 2) while that runs, prep the candidate board + edge crops in parallel
-export CLAUDE_SKILL_DIR="$HOME/.workbuddy/skills/geo-sleuth"
-S="$CLAUDE_SKILL_DIR/scripts"; RUN=<your-run-dir>; cd "$RUN"
+RUN=<your-run-dir>; cd "$RUN"
 uv run "$S/board.py" init --photo photo.jpg
 uv run "$S/board.py" country cn          # skip if unknown
 uv run "$S/imgprep.py" edges photo.jpg --out-dir edges/
@@ -61,11 +64,10 @@ uv run --with pillow evidence_sheet.py my_case.json evidence.jpg
 
 | Tool | Scope | Notes |
 |---|---|---|
-| `gg_fast.sh` / `fast_intake.sh` | **CN lane** | baidu-only intake, no OCR; baidu is strongest for CN scenes |
+| `gg_fast.sh` | **CN lane** | baidu-only intake, no OCR; baidu is strongest for CN scenes |
 | `amap_sat.py` | **CN-only imagery** | overseas AMap tiles return a "no satellite imagery" placeholder (tested) |
 | `phone_lookup.py` | 🌍 **worldwide, offline** | libphonenumber geodata bundled; zero network, GFW-proof |
 | `sat_global.py` | 🌍 worldwide | ESRI/Google tiles; from CN set `GEO_PROXY` to your VPN |
-| `intake_global.sh` | 🌍 worldwide | all engines + OCR on; needs global reachability or `GEO_PROXY` |
 | `global_accuracy.sh` | 🌍 worldwide | accuracy-first prep lane + SOP (CN/OV split), `REGION` speed profiles |
 | `script_route.py` / `driving_side.py` / `sun_hint.py` | 🌍 worldwide | step-0 region eliminators (script / traffic side / hemisphere) |
 | `pin_title_mine.py` | 🌍 worldwide | mines baidu rev-search source pages for place names (~30s) |
@@ -73,7 +75,7 @@ uv run --with pillow evidence_sheet.py my_case.json evidence.jpg
 | `evidence_sheet.py` | 🌍 worldwide | pure local image compositing |
 
 **Rule of thumb:** CN photo → CN lane (`gg_fast.sh` + `amap_sat.py`).
-Anything else → worldwide lane (`intake_global.sh` + `sat_global.py`), with
+Anything else → worldwide lane (`global_accuracy.sh` + `sat_global.py`), with
 `GEO_PROXY` exported if you run from mainland China. `phone_lookup.py` and
 `evidence_sheet.py` help on both lanes.
 
@@ -132,20 +134,37 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 
 ## What's inside
 
+### Lane launchers (run these first)
+
 | File | What it does |
 |---|---|
-| `gg_fast.sh` | One-command CN fast lane: run dir + background baidu intake + board + crops, prints a timed SOP. |
-| `fast_intake.sh` | Run `intake.py` **Baidu-only, no OCR, in the background** (~60s instead of ~190s). |
-| `amap_sat.py` | Stitch **AMap (Gaode)** satellite tiles into a mosaic. AMap is reachable from CN and replaces the blocked Google/ESRI source. Handles WGS84→GCJ-02. |
-| `phone_lookup.py` | **Offline worldwide phone-number geolocation** (libphonenumber). Numbers on signs/graffiti pin country + city with zero network. |
-| `sat_global.py` | Global satellite mosaic (ESRI/Google) for outside China, with `GEO_PROXY` support and `--dry-run` tile-math verification. |
-| `global_accuracy.sh` | Accuracy-first worldwide lane: full intake (OCR on) + fine OCR pass + baidu reverse search on every variant. |
-| `intake_global.sh` | Thin full-engine intake wrapper for non-CN photos (kept for ad-hoc use). |
-| `GLOBAL_ACCURACY_SOP.md` | Agent playbook for overseas photos: engine map, text-first / source-hunt / verify order, photo-type decision table. |
+| `gg_fast.sh` | One-command **CN fast lane**: run dir + background baidu-only intake + board + signboard crops, prints a timed SOP (~3 min end-to-end). |
+| `global_accuracy.sh` | **Worldwide accuracy lane**: full intake (OCR on) + fine OCR pass + baidu reverse search on variants + region eliminators; `REGION=auto\|sea\|eu\|na\|full` speed profiles. |
+| `gg_prep_batch.sh` | Staggered **parallel preps** for a batch of photos (2 photos: ~72s wall vs ~210s serial). |
+
+### Analysis tools (run during/after prep)
+
+| File | What it does |
+|---|---|
+| `pin_title_mine.py` | Mines baidu rev-search source pages (duitang/huaban/tuchong/699pic…) for **place names** — the highest-yield single step (~30s). |
+| `phone_lookup.py` | **Offline worldwide phone-number geolocation** (libphonenumber). Numbers on signs pin country + city with zero network. |
+| `script_route.py` | Writing system → **candidate regions + OCR languages** (Unicode ranges, no deps). |
+| `driving_side.py` | **LHT/RHT eliminator** — ~75 left-traffic territories + how to read the side when the wheel isn't visible. |
+| `sun_hint.py` | **Hemisphere/latitude narrowing** from EXIF GPS+time or a measured shadow bearing; wraps geo-sleuth `sun.py`. |
+| `sat_global.py` | Global satellite mosaic (ESRI/Google) for outside China, `GEO_PROXY` support, `--dry-run` tile-math check. |
+| `amap_sat.py` | **AMap (Gaode)** satellite mosaic for China (reachable from CN; WGS84→GCJ-02 handled). |
+| `evidence_sheet.py` | Compose a shareable evidence image (crops + captions + conclusion) from a JSON spec. |
+
+### Playbooks & records (read these)
+
+| File | What it does |
+|---|---|
 | `FIRST_ANSWER.md` | Answering protocol: declare a first answer in ~10s, then refine with a visible confirms/refines/overturns chain. |
-| `VISION_CLUES.md` | Systematic reading checklist (script, driving side, plates, architecture, street furniture…) for the agent's own eyes. |
-| `evidence_sheet.py` | Compose an evidence image (grid of crops + captions + conclusion) from a JSON spec — reusable across cases. |
-| `CHINA_NETWORK_NOTES.md` | Measured network constraints and the 3-minute workflow. |
+| `GLOBAL_ACCURACY_SOP.md` | Overseas agent playbook: engine map, step order (first answer → routing → read → text → source → verify), photo-type decision table. |
+| `VISION_CLUES.md` | Systematic reading checklist (script, driving side, plates, poles, architecture, vegetation…) + the CN-lookalike bias trap. |
+| `GLOBAL_OPTIMIZATION.md` | Overseas accuracy roadmap: measured dead-ends, 8 ranked optimization paths with status. |
+| `CHINA_NETWORK_NOTES.md` | Measured network constraints (what's reachable from CN) and the 3-minute workflow. |
+| `TEST_REPORT_V3.md` | v3 overseas blind test: 4 photos, country 4/4, city 3/4 — what each hit relied on. |
 | `examples/zhangjiajie_evidence.json` | Example `evidence_sheet.py` spec from a real Zhangjiajie run. |
 
 ## Prerequisites
@@ -161,7 +180,8 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 
 ```bash
 # run in background so you can prep the board in parallel
-bash fast_intake.sh photo.jpg intake/ &
+export GEO_SLEUTH_SKILL="$HOME/.workbuddy/skills/geo-sleuth"
+uv run "$GEO_SLEUTH_SKILL/scripts/intake.py" photo.jpg --out-dir intake/ --no-ocr --engines baidu &
 
 # meanwhile, in another shell:
 export CLAUDE_SKILL_DIR="$HOME/.workbuddy/skills/geo-sleuth"
