@@ -71,20 +71,30 @@ Anything else → worldwide lane (`intake_global.sh` + `sat_global.py`), with
 ### Worldwide lane — measured reality (2026-10-12, from CN)
 
 Blind-tested on 4 photos (Paris street / Tokyo skyline / Morocco ksar /
-Mexico City Zocalo): **3/4 country, 2/4 city** — the worldwide lane is
-**half-usable** from this network. What the measurements showed:
+Mexico City Zocalo), two lanes, same blind truth:
 
-- `intake.py`'s default engines are **baidu + yandex** (not google/bing), and
-  **yandex is captcha-blocked on every variant** → baidu is the only working engine
-- Baidu covers **overseas landmark/postcard scenes** (Tokyo → "富士山与东京夜景",
-  Mexico City → "墨西哥城历史中心广场"×3) but **fails on ordinary foreign streets**
-  (Paris Montmartre → no place at all, only visual tags)
-- `sat_global.py` is unusable from CN without a working `GEO_PROXY`
-- CN lane, by contrast, is the reliable one on this network
+| | v1 (image engines only) | v2 (accuracy-first: `global_accuracy.sh` + SOP) |
+|---|---|---|
+| Country | 3/4 | **4/4** |
+| City | 2/4 | **3/4** |
+| Spot (street/square/site) | 1/4 | **3/4** |
 
-So treat the worldwide lane as a **best-effort first pass for famous scenes**;
-for ordinary street views, add manual visual analysis + web search on top.
-Full numbers: `CHINA_NETWORK_NOTES.md` ("Global lane measured").
+What moved the numbers:
+- **Paris** (was country-level FAIL): baidu is a dead end on ordinary foreign
+  streets (4/4 variants returned the same visual-only tag). **Source hunting**
+  fixed it — the photo's origin gallery captions it "Rue de Ravignan:
+  Montmartre Street" → street-level hit, coordinates verified.
+- **Morocco** (city was wrong): baidu said 舍夫沙万; agent vision (earthen ksar,
+  not the blue city) + a ctrip source naming 阿伊特本哈杜 → correct site,
+  coordinates verified.
+- Tokyo / Mexico City were already right and stayed right with stronger evidence.
+
+Measured dead ends (do not retry blindly): Google Lens, TinEye, Mapillary,
+KartaView, cn.bing visual upload, Yandex image search, variant baidu rescue,
+`poi.py` on foreign POIs. What works: **Yandex WEB search via WebFetch,
+server-side WebSearch/WebFetch, source hunting, systematic agent vision.**
+Full numbers: `CHINA_NETWORK_NOTES.md` ("Engine availability probed",
+"Global lane retest").
 
 ## What's inside
 
