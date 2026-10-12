@@ -9,7 +9,7 @@ are the constraints that shaped the helpers in this repo.
 |---|---|---|
 | Google satellite tiles (`mt1.google.com/vt/lyrs=s`) | **timeout** | `tiles.py` default; unreachable |
 | ESRI World Imagery | **timeout** | also unreachable |
-| `GEO_PROXY=http://127.0.0.1:57941` | **connection refused** | the WorkBuddy proxy port was not up at test time; if it IS up, Google/ESRI may work and you can skip AMap |
+| `GEO_PROXY=http://127.0.0.1:7890` | **works (2026-10-12)** | system Clash port; flickr / commons / openverse / yandex all reachable through it. The old 57941 WorkBuddy port is often down |
 | Baidu reverse image search | **works (200)** | the killer feature for CN photos |
 | Baidu pano (street view) | **no coverage inside scenic areas** | works in cities (e.g. Shenzhen) but returns null in Zhangjiajie park |
 | Apple Vision OCR | works | but on a screenshot only reads the app UI text, not scene signs |
