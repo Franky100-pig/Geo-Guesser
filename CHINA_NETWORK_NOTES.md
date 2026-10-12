@@ -71,6 +71,25 @@ Conclusion: overseas accuracy comes from **text search + source hunting +
 systematic agent vision**, not from more image engines. Speed is irrelevant on
 this lane — see `GLOBAL_ACCURACY_SOP.md`.
 
+### Global lane retest (2026-10-12, accuracy-first v2, same 4 photos)
+
+Same blind truth, new lane (`global_accuracy.sh` + SOP). Result:
+**country 3/4 → 4/4, city 2/4 → 3/4, spot 1/4 → 3/4.**
+
+| Photo | v1 | v2 | What made the difference |
+|---|---|---|---|
+| Paris street | country FAIL | **street-level** (rue de Ravignan, Montmartre) | source hunt: origin gallery caption named the street |
+| Tokyo skyline | country+city | same, stronger | 4/4 consistent baidu votes + vision |
+| Morocco ksar | country ✓, city ✗ | **site-level** (Aït Ben Haddou) | vision rejected baidu's 舍夫沙万; ctrip source named the ksar |
+| Mexico Zócalo | country+city+spot | same, stronger | 5/5 votes + source page naming the cathedral |
+
+Additional measured findings from the retest:
+- fine OCR (3x3 tiles, 3x upscale): 0 useful items on all 4 photos — the source
+  images are too low-resolution; don't count on OCR for small web images
+- variant baidu reverse search: identical visual-only tags, no rescue
+- `poi.py` on foreign POIs returns **empty** (CN-oriented sources) → verify
+  overseas coordinates via WebSearch/WebFetch instead
+
 ## Practical 3-minute path (country / city / area)
 
 1. `bash fast_intake.sh photo.jpg intake/ &`  (Baidu-only, ~60s, non-blocking)
