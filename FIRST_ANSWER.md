@@ -73,6 +73,9 @@ Never silently swap an answer. The visible chain
 - In a run directory: write it to `FIRST_ANSWER.md` (or
   `board.py clue add` with `level=guess`) at T+0, then edit it as evidence
   lands.
+- **Accumulated project experience:** `experience/` — real solved cases and
+  scene-archetype lessons, growing as we identify more. Seed a case's reusable
+  lesson there after a run.
 
 ## Wiring
 
