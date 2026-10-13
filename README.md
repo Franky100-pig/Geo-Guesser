@@ -15,50 +15,39 @@ the default Google/ESRI satellite sources and some engines are unreachable.
 
 These helpers restore a usable workflow without touching the upstream skill.
 
-## Quick Start — geolocate a photo in ~3 minutes
+## Quick Start — one command (30 seconds to begin)
 
-**Answering protocol (both lanes):** every photo gets a **first answer within
-~10 seconds of seeing it** — country/city + confidence + one-line why — before
-any prep output is read; later evidence then confirms / refines / overturns it
-with the chain kept visible. Protocol: `FIRST_ANSWER.md`.
-
-One-command version (sets up run dir, background intake, board and signboard
-crops in a single call, then prints the timed next steps):
+You do **not** need to understand `uv`, environment variables, or the
+"China vs worldwide" lane split. A single command does it all:
 
 ```bash
-bash gg_fast.sh photo.jpg run1
+bash geo.sh 你的照片.jpg
 ```
 
-Assumes geo-sleuth is installed at `~/.workbuddy/skills/geo-sleuth`
-(see Prerequisites) and you have a photo, e.g. `photo.jpg`:
+`geo.sh` copies your photo into a fresh working folder, picks the right
+analysis pipeline for you (China fast lane or worldwide accuracy lane), and
+prints a plain "what to look at next" checklist. You then read the evidence
+it lays out and decide the location.
+
+Two optional one-word hints:
 
 ```bash
-# 0) point at the geo-sleuth skill
-export CLAUDE_SKILL_DIR="$HOME/.workbuddy/skills/geo-sleuth"
-S="$CLAUDE_SKILL_DIR/scripts"
-
-# 1) start fast intake in the background (~60s; Baidu-only, no OCR)
-uv run "$S/intake.py" photo.jpg --out-dir intake/ --no-ocr --engines baidu &
-
-# 2) while that runs, prep the candidate board + edge crops in parallel
-RUN=<your-run-dir>; cd "$RUN"
-uv run "$S/board.py" init --photo photo.jpg
-uv run "$S/board.py" country cn          # skip if unknown
-uv run "$S/imgprep.py" edges photo.jpg --out-dir edges/
-wait                                      # 3) intake/intake.md is ready
-
-# 4) read the Baidu vote + the contact sheet (intake/rev/photo_baidu_similar.jpg)
-#    -> for most CN photos this alone names the place at country/city/area level
+bash geo.sh 你的照片.jpg cn      # clearly a Chinese scene & want it faster → CN fast lane
+bash geo.sh 你的照片.jpg world   # explicitly an overseas photo → worldwide lane (same as auto)
 ```
 
-Optional follow-ups (outside the 3-minute budget):
+> **Answering protocol:** the workflow always opens with a *first answer*
+> within ~10 seconds of seeing the photo (country/city + confidence +
+> one-line reason), then refines it as evidence arrives — the
+> confirms / refines / overturns chain stays visible. See `FIRST_ANSWER.md`.
 
-```bash
-# verify road layout against a satellite mosaic
-uv run --with pillow amap_sat.py <lat> <lon> 18 2 sat.jpg
-# compose a shareable one-page evidence sheet
-uv run --with pillow evidence_sheet.py my_case.json evidence.jpg
-```
+### One-time setup
+
+See **Prerequisites** below (install `uv`, and have geo-sleuth available).
+`geo.sh` checks both for you and prints the exact fix if anything is missing.
+
+That is the entire getting-started. Everything under **Scope**, **What's inside**,
+and **Advanced usage** is optional detail for when you want manual control.
 
 ## Scope: China lane vs worldwide lane
 
@@ -136,6 +125,8 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 
 ### Lane launchers (run these first)
 
+> Most users only need `geo.sh` — it wraps both launchers below and auto-picks the lane.
+
 | File | What it does |
 |---|---|
 | `gg_fast.sh` | One-command **CN fast lane**: run dir + background baidu-only intake + board + signboard crops, prints a timed SOP (~3 min end-to-end). |
@@ -169,12 +160,17 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 
 ## Prerequisites
 
-- `uv` (https://docs.astral.sh/uv/)
+- `uv` — install once (≈10s):
+  `curl -LsSf https://astral.sh/uv/install.sh | sh`
+  (docs: https://docs.astral.sh/uv/)
 - geo-sleuth installed: `https://github.com/Oldcircle/geo-sleuth`
   (default location assumed: `~/.workbuddy/skills/geo-sleuth`; override with
   `GEO_SLEUTH_SKILL=/path/to/geo-sleuth`).
 
-## Usage
+## Advanced usage (manual control)
+
+If you want to run a single step by hand (e.g. only the satellite fallback,
+or a batch of photos), the commands below bypass `geo.sh`.
 
 ### Fast intake (Baidu-only, ~60s, non-blocking)
 
