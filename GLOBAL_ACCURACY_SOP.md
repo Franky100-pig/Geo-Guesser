@@ -27,8 +27,11 @@ engines — it comes from **text search + source hunting + agent vision**.
 
 ## The workflow (do all steps; they are cheap and independent)
 
-### Step 0 — First answer, T+0 (before prep output is even read)
-~10-second glance at `photo.jpg` and declare, per `FIRST_ANSWER.md`:
+### Step 0 — Rapid triage (first answer, T+0, before prep output is even read)
+~10-second **no-tool** glance at `photo.jpg` and declare, per `FIRST_ANSWER.md`
+(the concrete techniques and archetype cheat-sheet now live in the geo-sleuth
+skill: `references/rapid-triage.md` — read it for the scene-archetype menu and
+bias traps):
 ```
 First answer: <country> / <city-or-region>  (confidence: low|medium|high)
 Why: <one line, strongest visible clue>
