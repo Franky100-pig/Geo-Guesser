@@ -1,0 +1,8 @@
+# Blind-test image sets (regenerable via tools/build_rapid_testset.py)
+tests/*/*.jpg
+tests/*/*.jpeg
+tests/*/*.png
+
+# scratch
+case_*/
+*.log

@@ -1,0 +1,90 @@
+{
+  "t01.jpg": {
+    "seed_country": "Netherlands",
+    "lat": 52.297438,
+    "lon": 5.205035,
+    "title": "File:Macrothylacia rubi larva, Huizen.jpg",
+    "dist_m": 445.4,
+    "bytes": 2413431
+  },
+  "t02.jpg": {
+    "seed_country": "Japan",
+    "lat": 35.010258,
+    "lon": 135.770488,
+    "title": "File:Japan 2010 DSCN3445 (5373328620).jpg",
+    "dist_m": 52.9,
+    "bytes": 1888508
+  },
+  "t03.jpg": {
+    "seed_country": "Kenya",
+    "lat": -1.289976,
+    "lon": 36.820032,
+    "title": "File:Parliament Buildings, Nairobi, Kenya-21April2010.jpg",
+    "dist_m": 4.4,
+    "bytes": 600116
+  },
+  "t04.jpg": {
+    "seed_country": "Australia",
+    "lat": -33.87019,
+    "lon": 151.21006,
+    "title": "File:Alannah Coleman May 1949.jpg",
+    "dist_m": 21.8,
+    "bytes": 853634
+  },
+  "t05.jpg": {
+    "seed_country": "India",
+    "lat": 28.611048,
+    "lon": 77.211914,
+    "title": "File:India-0308 - Flickr - archer10 (Dennis).jpg",
+    "dist_m": 220.2,
+    "bytes": 1016719
+  },
+  "t06.jpg": {
+    "seed_country": "Peru",
+    "lat": -12.049589,
+    "lon": -77.039551,
+    "title": "File:RUMBO A LA PLAZA SAN MARTIN.jpg",
+    "dist_m": 66.9,
+    "bytes": 394121
+  },
+  "t07.jpg": {
+    "seed_country": "Brazil",
+    "lat": -23.55,
+    "lon": -46.63,
+    "title": "File:Liga Gamers Club A.png",
+    "dist_m": 0,
+    "bytes": 213167
+  },
+  "t08.jpg": {
+    "seed_country": "Morocco",
+    "lat": 31.629998499003,
+    "lon": -8.009934425354,
+    "title": "File:جنان الحارثي6.jpg",
+    "dist_m": 6.2,
+    "bytes": 2063693
+  },
+  "t09.jpg": {
+    "seed_country": "Greece",
+    "lat": 39.62,
+    "lon": 19.92,
+    "title": "File:Government of the Kingdom of Serbia 20240422 112937.jpg",
+    "dist_m": 0,
+    "bytes": 753152
+  },
+  "t10.jpg": {
+    "seed_country": "Vietnam",
+    "lat": 10.819269533664,
+    "lon": 106.63094043732,
+    "title": "File:Super Vietnam (33594007).jpeg",
+    "dist_m": 130.9,
+    "bytes": 859610
+  },
+  "t11.jpg": {
+    "seed_country": "Canada",
+    "lat": 45.50012639,
+    "lon": -73.57016721,
+    "title": "File:City Views. Sun Life Bldg. Twilight, From Gazette Office BAnQ P48S1P01217.jpg",
+    "dist_m": 19.2,
+    "bytes": 41260
+  }
+}
