@@ -1,5 +1,7 @@
 # Geo-Guesser
 
+> English · [简体中文](README.zh-CN.md)
+
 A small toolbox of **China-network workarounds** for [geo-sleuth](https://github.com/Oldcircle/geo-sleuth)
 (an MIT-licensed agent skill for photo geolocation). It is *not* a fork of
 geo-sleuth — it complements it when you run the skill from mainland China, where
@@ -156,6 +158,7 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 | `GLOBAL_OPTIMIZATION.md` | Overseas accuracy roadmap: measured dead-ends, 8 ranked optimization paths with status. |
 | `CHINA_NETWORK_NOTES.md` | Measured network constraints (what's reachable from CN) and the 3-minute workflow. |
 | `TEST_REPORT_V3.md` | v3 overseas blind test: 4 photos, country 4/4, city 3/4 — what each hit relied on. |
+| `README.zh-CN.md` | Chinese translation of this README. |
 | `examples/zhangjiajie_evidence.json` | Example `evidence_sheet.py` spec from a real Zhangjiajie run. |
 
 ## Prerequisites
