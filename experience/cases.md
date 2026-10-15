@@ -32,3 +32,20 @@ lesson into `archetypes.md` or `bias-traps.md`.
 - **Final:** — (pending)
 - **Lesson:** olive + limestone + green-bin cluster → Greece first; Croatia /
   Turkey / Italy as runners-up.
+
+---
+
+### 2026-10-14 blind round 1 — t06 Peru street sign (TOOL-CONFIRMED)
+- **Source:** `tests/rapid_20261014/t06.jpg`, truth = Peru, Lima (Plaza San Martín).
+- **First (rapid):** Mexico / Chile (low). Why: Spanish sign + red-earth +
+  cordillera silhouette → guessed a "plausible Spanish-speaking neighbour".
+- **Refined:** — (n/a; this was a blind-test miss, not a live case)
+- **Final:** Peru (ground truth).
+- **Lesson (high value):** this is the single biggest accuracy leak — when no
+  strong cue is present, I name a *plausible neighbour* instead of declining.
+  Spanish + red soil + mountains is NOT uniquely Peru. Discriminators that were
+  missed: the specific sign typography, coastal-desert vs high-altiplano context,
+  and absence of the markers that would pin Mexico (pine sierras) or Chile (arid
+  sparseness). **Fix:** a lone cue caps at `low`; if I can't name ≥2 cross-
+  confirming cues, the answer should be a *region* or a `decline`, never a
+  confident single-country guess. See `RAPID_ACCURACY.md` lever #2.

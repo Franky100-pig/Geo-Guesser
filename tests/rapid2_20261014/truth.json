@@ -1,0 +1,82 @@
+{
+  "t01.jpg": {
+    "seed_country": "Nigeria",
+    "lat": 6.51745,
+    "lon": 3.387383,
+    "title": "File:Sky view trees on road way.jpg",
+    "dist_m": 863.5,
+    "bytes": 956295
+  },
+  "t02.jpg": {
+    "seed_country": "Japan",
+    "lat": 35.010055555556,
+    "lon": 135.77096666667,
+    "title": "File:Sanjo Station Sign (Keihan) 2.jpg",
+    "dist_m": 88.3,
+    "bytes": 695715
+  },
+  "t03.jpg": {
+    "seed_country": "Kenya",
+    "lat": -1.289873,
+    "lon": 36.818951,
+    "title": "File:Nairobi.KICC Building. - panoramio.jpg",
+    "dist_m": 117.5,
+    "bytes": 521607
+  },
+  "t04.jpg": {
+    "seed_country": "Turkey",
+    "lat": 41.009827,
+    "lon": 28.979638,
+    "title": "File:Istanbulun tarih içinde tarih surlarından biri by ismail soytekinoğlu - panoramio.jpg",
+    "dist_m": 36,
+    "bytes": 543905
+  },
+  "t05.jpg": {
+    "seed_country": "Russia",
+    "lat": 56.329887,
+    "lon": 44.000137,
+    "title": "File:Nizhegorodskiy rayon, Nizhnij Novgorod, Nizhegorodskaya oblast', Russia - panoramio (29).jpg",
+    "dist_m": 15.1,
+    "bytes": 604583
+  },
+  "t06.jpg": {
+    "seed_country": "India",
+    "lat": 28.611048,
+    "lon": 77.211914,
+    "title": "File:India-0239 - Flickr - archer10 (Dennis).jpg",
+    "dist_m": 220.2,
+    "bytes": 192722
+  },
+  "t07.jpg": {
+    "seed_country": "Canada",
+    "lat": 45.500241,
+    "lon": -73.570268,
+    "title": "File:The Sun Life Building (2934606472).jpg",
+    "dist_m": 34,
+    "bytes": 1017273
+  },
+  "t08.jpg": {
+    "seed_country": "Egypt",
+    "lat": 30.049806,
+    "lon": 31.2385,
+    "title": "File:Bahgoury&Hamdy DownTownCairo2002.jpg",
+    "dist_m": 146,
+    "bytes": 620561
+  },
+  "t09.jpg": {
+    "seed_country": "Morocco",
+    "lat": 31.630680555556,
+    "lon": -8.0095333333333,
+    "title": "File:Garden in Marrakesh.jpeg",
+    "dist_m": 87.6,
+    "bytes": 836547
+  },
+  "t10.jpg": {
+    "seed_country": "Germany",
+    "lat": 52.52,
+    "lon": 13.4,
+    "title": "File:Berlin-bvg-sl-m1-gt6n-u-939098.jpg",
+    "dist_m": 0,
+    "bytes": 284667
+  }
+}

@@ -53,6 +53,19 @@ Format:
   island vs mainland decides Ionian vs Peloponnese.
 - Source: 2026-10-13 tuxun global #4 (rapid-only, unverified).
 
+### Andean / Latin-American red-earth urban street (NEGATIVE-clue entry)
+- Look for: red-earth tone, a cordillera silhouette in frame, Spanish-language
+  **street signage**, mid-rise concrete/plaster buildings.
+- ⚠️ **Trap:** this reads "plausible Spanish-speaking country" and invites a
+  confabulated guess (Mexico / Chile / Peru / Ecuador are all fair). A single
+  Spanish-sign + red-soil cue is **not** sufficient to name one country.
+- Points to: a *region* only — **Andes / Spanish-America**, never collapse to
+  one member on weak evidence.
+- Strength: weak as a single-country cue; promote to a *decline* or *region* read
+  unless ≥2 cross-confirming specifics appear (altiplano village form, coastal
+  desert context, distinct sign typography).
+- Source: 2026-10-14 blind R1 t06 — truth Peru, misread as Mexico/Chile (miss).
+
 ---
 
 ## More to confirm (from the skill menu — pending a solved case)
