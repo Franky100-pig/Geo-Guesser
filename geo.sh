@@ -31,6 +31,16 @@ if [[ -z "$PHOTO" || ! -f "$PHOTO" ]]; then
   exit 1
 fi
 
+# reject typos early — otherwise an unknown mode silently ran the slow lane
+case "$MODE" in
+  auto|cn|world) ;;
+  *)
+    echo "✗ 未知通道 / Unknown mode: $MODE"
+    echo "  可用值 / Valid modes: auto | cn | world"
+    exit 1
+    ;;
+esac
+
 # --- 1) 定位 geo-sleuth 技能 ---------------------------------------------
 SKILL="${GEO_SLEUTH_SKILL:-$HOME/.workbuddy/skills/geo-sleuth}"
 if [[ ! -d "$SKILL" ]]; then
@@ -62,7 +72,7 @@ case "$MODE" in
     echo "▶ 国外高精度通道 (worldwide accuracy lane)"
     bash "$SELF_DIR/global_accuracy.sh" "$PHOTO"
     ;;
-  auto|*)
+  auto)
     echo "▶ 自动通道（国内/国外都支持，最稳妥）"
     echo "  若一眼看出是国内街景、想更快，可加 cn："
     echo "    bash geo.sh $(basename "$PHOTO") cn"
