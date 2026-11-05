@@ -3,6 +3,15 @@ tests/*/*.jpg
 tests/*/*.jpeg
 tests/*/*.png
 
+# Run dirs created by the lane scripts / geo.sh (never commit these)
+gg_run_*/
+gg_global_*/
+gg_batch_*/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
 # scratch
 case_*/
 *.log
