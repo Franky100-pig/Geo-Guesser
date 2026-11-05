@@ -17,6 +17,12 @@
 # macOS-only: uses sips for image dimensions.
 set -euo pipefail
 
+if [ $# -lt 1 ] || [ ! -f "$1" ]; then
+  echo "Usage: bash gg_fast.sh <photo> [run_dir]" >&2
+  echo "  (or just use the one-command launcher: bash geo.sh <photo> cn)" >&2
+  exit 1
+fi
+
 PHOTO="$1"
 RUN="${2:-gg_run_$(date +%H%M%S)}"
 SKILL="${GEO_SLEUTH_SKILL:-$HOME/.workbuddy/skills/geo-sleuth}"
