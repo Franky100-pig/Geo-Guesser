@@ -8,6 +8,14 @@ skill's `rapid-triage.md`.
 ## Round 1 — `tests/rapid_20261014` (n=11) — genuine blind, tool-confirmed
 - answered 9 · declined 2 · correct 8
 - **8/9 = 89% of answered**, **8/11 = 73% of all photos**
+- Reproducible now: `answers.json` holds the 11 first answers and
+  `python3 tools/score_rapid.py tests/rapid_20261014` reproduces 89% / 73%
+  (by bucket: high 3/3, medium 2/2, low 3/4, decline 2 neutral).
+  **Provenance / honesty note:** the answers were given blind *before* the
+  reveal but were not written to disk at the time; `answers.json` was
+  reconstructed afterwards from the verbatim session transcript (the
+  per-photo reasoning recorded before `--reveal` was run), not inferred from
+  the truth. Nothing was changed to make the score come out right.
 - miss: t06 = Peru (Lima, Plaza San Martín street sign) read as Mexico/Chile.
   Lone Spanish-sign + red-soil + cordillera cue → confabulated a plausible
   neighbour. See `experience/cases.md` + `archetypes.md` (Andean negative-clue).
