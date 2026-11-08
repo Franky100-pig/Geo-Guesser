@@ -1,0 +1,13 @@
+{
+  "t01.jpg": {"cluster": "decline", "conf": "decline", "cues": [], "alt": [], "overturn": "", "note": "caterpillar close-up on sand+grass; no geographic signal"},
+  "t02.jpg": {"cluster": "Japan", "conf": "high", "cues": ["Japanese izakaya chalkboard", "sake barrel 臼松", "Japanese text"], "alt": [], "overturn": "kana absent + Latin-only signage"},
+  "t03.jpg": {"cluster": "Kenya", "conf": "medium", "cues": ["modernist building with frieze of figures", "palm trees", "black/white striped curbs", "men in suits"], "alt": ["East Africa / former British colony"], "overturn": ""},
+  "t04.jpg": {"cluster": "decline", "conf": "decline", "cues": [], "alt": [], "overturn": "", "note": "B&W portrait with painting (artwork); no geographic signal"},
+  "t05.jpg": {"cluster": "India", "conf": "low", "cues": ["Gandhi & Kasturba wax figures", "dark wood memorial interior"], "alt": [], "overturn": "", "note": "original confidence stated as low-medium"},
+  "t06.jpg": {"cluster": "Mexico", "conf": "low", "cues": ["pride parade, rainbow + trans flag", "beige 1960s slab with rounded corner", "ornate early-1900s building", "overcast"], "alt": ["Chile"], "overturn": "the Latin America cluster was right, country-level pick was wrong"},
+  "t07.jpg": {"cluster": "Brazil", "conf": "high", "cues": ["Portuguese SÉRIE A", "Liga Gamers Club logo"], "alt": [], "overturn": "", "note": "a logo, not a street scene; original confidence stated as high-ish"},
+  "t08.jpg": {"cluster": "Morocco", "conf": "low", "cues": ["olive-tree-lined garden path", "manicured hedges", "palm"], "alt": ["Spain", "Italy", "Greece"], "overturn": ""},
+  "t09.jpg": {"cluster": "Greece", "conf": "medium", "cues": ["Serbian Cyrillic plaque with English translation", "Hotel Bela Venezia / Serbian government in exile WWI 1916-1918", "coat of arms"], "alt": ["Serbia"], "overturn": "if the plaque were a memorial in Serbia rather than at the exile hotel site"},
+  "t10.jpg": {"cluster": "Vietnam", "conf": "high", "cues": ["bamboo shoulder-pole baskets", "street vendor", "red-white striped pole"], "alt": [], "overturn": ""},
+  "t11.jpg": {"cluster": "Canada", "conf": "low", "cues": ["B&W historic skyline", "large domed church on a hill", "tall slab tower"], "alt": ["United States"], "overturn": "", "note": "Montreal guessed from dome + hill; original confidence low-medium"}
+}
