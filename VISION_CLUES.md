@@ -5,14 +5,23 @@ lane has no Google Lens, so systematic reading IS the engine). Deep, sourced
 versions of many of these live in the geo-sleuth skill's
 `references/clues/global.md` and region packs — this file is the quick pass.
 
+**Signs and markings have their own deep-pass library: `ROAD_SIGNS.md`.**
+Use it whenever a warning sign, direction board, STOP sign, centre line or
+street plaque is visible — those are standards, so they eliminate continents
+more reliably than architecture. `driving_side.py --how` prints the full
+list of ways to read the traffic side when the steering wheel is hidden.
+
 ## First pass — whole frame, ~10 seconds
 
 | Clue | What it tells you | Tool |
 |---|---|---|
 | Script / writing system on any sign | language family: latin, cyrillic, arabic, devanagari, han, kana, hangul, thai… | `script_route.py --ocr ocr_fine.json` |
-| Driving side (steering wheel / driver position) | ~75 countries drive on the left; splits e.g. UK/JP/IN/AU vs mainland | `driving_side.py --side left\|right` |
+| **Warning-sign shape** | red upright triangle → Vienna/Europe family; yellow diamond → MUTCD (US/CA/AU/JP) or **Ireland** | `ROAD_SIGNS.md` §1, §1a |
+| Driving side (steering wheel / driver position) | ~75 countries drive on the left; splits e.g. UK/JP/IN/AU vs mainland | `driving_side.py --side left\|right`, `--how`, `--country` |
+| **STOP / yield wording** | ARRÊT→Québec, ALTO→Spanish Americas, 止まれ→Japan, 停→CN | `ROAD_SIGNS.md` §2 |
 | License plate format + color | EU blue strip, US/CA plain white, JP white+green, CN blue… | (manual) |
-| Road center line color | yellow → US/Canada (most of the world is white) | (manual) |
+| Road center line color | yellow → US/CA **and mainland China**; white → Europe (see caveat) | `ROAD_SIGNS.md` §5 |
+| **Direction-board color** | encodes road *class*, not country (DE blue/yellow/green/white) | `ROAD_SIGNS.md` §3 |
 | Sun / shadow direction | hemisphere + rough latitude + time of day | `sun_hint.py --exif intake/exif.json` |
 | Vegetation | palms → tropical/arid; conifers → temperate/cold; dense broadleaf → humid subtropical | (manual) |
 | Skyline / terrain | mountains, coast, plain, density of high-rises | (manual) |
@@ -35,7 +44,8 @@ versions of many of these live in the geo-sleuth skill's
 
 - **Street plaques** differ per country: France blue-white enamel, Germany
   white-black, UK blue with street name, US green/white. A readable plaque is
-  the single strongest text clue.
+  the single strongest text clue. Full plaque/board/shield table: `ROAD_SIGNS.md`
+  §3, §6, §7 — including the Germany colour-by-road-class trap.
 - **Business signs**: language + phone number format → feed numbers to
   `phone_lookup.py` (offline, global).
 - Currency symbols, units (km/h vs mph), date formats, price magnitudes.
@@ -71,7 +81,10 @@ versions of many of these live in the geo-sleuth skill's
 - **US / Canada**: yellow center lines, STOP signs, barrel hydrants,
   green highway signage, exit numbers.
 - **Latin America**: terracotta roofs, Spanish, window bars, vivid walls,
-  yellow-and-white road signs.
+  yellow-and-white road signs, `ALTO`/`PARE` STOP wording.
+- **UK vs Ireland** (both LHT, both English): yellow diamond warnings +
+  bilingual Gaeilge + km/h → Ireland; red triangles + mph → UK.
+  See `ROAD_SIGNS.md` §1a.
 - **MENA / North Africa**: earthen ksar, minarets, Arabic script, satellite
   dishes, donkeys in villages.
 - **Southeast / South Asia**: scooter density, dense overhead wiring,
