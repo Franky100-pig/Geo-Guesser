@@ -17,7 +17,9 @@ exceptions.
 Usage:
   python driving_side.py --side left        # we observed LEFT-hand traffic
   python driving_side.py --side right
+  python driving_side.py --country Japan    # look up one place -> left/right
   python driving_side.py --list             # print the LHT territory set
+  python driving_side.py --how              # how to read the side in a photo
 """
 from __future__ import annotations
 
@@ -82,6 +84,33 @@ NEAR_BORDER_EXCEPTIONS = (
 )
 
 
+def canonical(name: str) -> str:
+    """Resolve a spelling variant to the canonical LHT-set name."""
+    key = " ".join(name.strip().lower().split())
+    if key in ALIASES:
+        return ALIASES[key]
+    for place in LEFT_DRIVE:
+        if place.lower() == key:
+            return place
+    return name.strip()
+
+
+def lookup(country: str) -> dict:
+    """Look up ONE place instead of eliminating from an observed side."""
+    place = canonical(country)
+    is_lht = place in LEFT_DRIVE
+    return {
+        "place": place,
+        "side": "left" if is_lht else "right",
+        "in_lht_set": is_lht,
+        "note": ("Listed as LHT; still confirm in the photo."
+                 if is_lht else
+                 "Not in the LHT set → RHT. The set is non-exhaustive for tiny "
+                 "dependencies, so verify an unusual territory externally."),
+        "exceptions": NEAR_BORDER_EXCEPTIONS,
+    }
+
+
 def eliminate(side: str) -> dict:
     """Given the observed side, return the opposite set as 'eliminated'."""
     side = side.strip().lower()
@@ -99,30 +128,51 @@ def eliminate(side: str) -> dict:
         "eliminated": eliminated,
         "kept_lht_territories": kept if observed_lht else None,
         "note": "Narrowing clue only — verify with a second independent clue (script, plates, architecture).",
+        "exceptions": NEAR_BORDER_EXCEPTIONS,
     }
 
 
-VISION_PROMPT = (
-    "Driving side: which side of the road do vehicles keep to? "
-    "Driver seat on the RIGHT + traffic on the LEFT → LEFT-hand-traffic countries "
-    "(UK, Ireland, India, Japan, Thailand, Indonesia, Australia, NZ, Singapore, "
-    "Malaysia, Kenya, South Africa, …). Driver seat on the LEFT + traffic on the "
-    "RIGHT → the rest of the world. Report 'left' or 'right'."
-)
+HOW_TO_OBSERVE = """How to read the driving side when the steering wheel is not visible:
+
+1. Parked cars: which direction do they nose into the kerb? Cars parked
+   against the flow are the exception, so read several, not one.
+2. A bus / truck on the far carriageway shows the driver-seat side, and bus
+   doors face the kerb the bus serves.
+3. Windscreen wipers and door mirrors are biased toward the driver's side.
+4. Roundabout circulation: clockwise = LHT. Roundabouts are rare in North
+   America and mainland China, common in the UK, France and Australia.
+5. One-way arrows, lane arrows at a junction, and which lane a turning
+   vehicle occupies all reveal the flow direction.
+6. Toll booths / drive-through windows sit on the driver's side.
+7. Pedestrian "look left / look right" road markings (tourist areas) name the
+   side explicitly.
+8. A photo or video may be MIRRORED — check reversed text and plates first.
+
+Report 'left' or 'right'. Then combine with a second independent clue
+(script, plate format, road-sign family in ROAD_SIGNS.md) before excluding
+any candidate. Border cases: """ + NEAR_BORDER_EXCEPTIONS
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--side", choices=["left", "right"], help="observed traffic side")
+    ap.add_argument("--country", help="look up one place -> left/right")
     ap.add_argument("--list", action="store_true", help="print LHT territories")
+    ap.add_argument("--how", action="store_true", help="how to read the side in a photo")
     args = ap.parse_args()
     if args.list:
         print(json.dumps(sorted(LEFT_DRIVE), ensure_ascii=False, indent=2))
         return
+    if args.country:
+        print(json.dumps(lookup(args.country), ensure_ascii=False, indent=2))
+        return
     if args.side:
         print(json.dumps(eliminate(args.side), ensure_ascii=False, indent=2))
         return
-    print(VISION_PROMPT)
+    if args.how:
+        print(HOW_TO_OBSERVE)
+        return
+    print(HOW_TO_OBSERVE)
 
 
 if __name__ == "__main__":
