@@ -66,6 +66,33 @@ Format:
   desert context, distinct sign typography).
 - Source: 2026-10-14 blind R1 t06 — truth Peru, misread as Mexico/Chile (miss).
 
+### Road-sign family (Vienna vs MUTCD) — sign-shaped cluster read
+- Look for: the **warning-sign shape/border** first, then STOP wording and
+  direction-board colour. Red upright triangle → Vienna/continental Europe
+  family; yellow diamond → MUTCD family (US/CA/AU/JP) **or Ireland**.
+- Points to: a *sign-standard cluster*, not a country — see `ROAD_SIGNS.md`.
+  Pairs naturally with script + driving side as the second independent clue.
+- Strength: rapid-only (cluster-level), medium with a second clue; never
+  excludes on one sign.
+- Separators / counterexamples: amber-filled red triangles in Nordic/Balkan
+  snow countries; black-border yellow triangle in mainland China; white/red
+  triangle in Taiwan (China); Ireland's yellow diamonds; Japan's diamond +
+  止まれ inverted-triangle STOP; Germany's colour-by-road-class boards.
+- Source: public sign manuals cross-checked 2026-11-12 (UNECE Vienna
+  Convention, MUTCD, StVO, TII); **unverified — not yet confirmed on a solved
+  photo in this project.** Promote after a real case.
+
+### UK vs Ireland — the left-driving look-alike pair
+- Look for: both are LHT and English-speaking, so driving side cannot split
+  them. Read the **warning sign** (UK red triangle / IE yellow diamond), the
+  **unit** (UK mph / IE km/h) and **bilingual Gaeilge** place names.
+- Points to: Ireland when yellow diamond + bilingual + km/h agree → UK otherwise.
+- Strength: rapid-only, weak between members unless ≥2 of the three agree.
+- Separators / counterexamples: Northern Ireland (part of the UK) uses UK signs
+  and mph; Gaeltacht signs can be Irish-only; motorway boards are blue in both.
+- Source: `ROAD_SIGNS.md` §1a (RSA *Rules of the Road* / TII manual,
+  cross-checked 2026-11-12); **unverified on a solved case**.
+
 ---
 
 ## More to confirm (from the skill menu — pending a solved case)

@@ -42,7 +42,14 @@ Honest ceiling: for **text-less foreign street views** (no signs, no plates, no 
 - **Risk:** cost; proxy reliability; some APIs still captcha.
 - **Expected gain:** the missing 4th *spot* and a faster path to the right region.
 
-### 3. Static clue libraries (cheap knowledge, big vision boost)
+### 3. Static clue libraries (cheap knowledge, big vision boost) — **PARTIALLY IMPLEMENTED** (`ROAD_SIGNS.md`, 2026-11-12)
+- **Done:** `ROAD_SIGNS.md` covers warning-sign shape, STOP/yield wording,
+  direction-board colour by road class, speed-limit shape + mph/km-h ranges,
+  centre lines, street plaques, route shields and delineators, each with
+  strength + counterexamples; `driving_side.py` LHT data corrected and given
+  `--country` / `--how`. `VISION_CLUES.md`, the SOP, `FIRST_ANSWER.md` and
+  `global_accuracy.sh` all point at it. Still open from the original list:
+  power-pole/transformer styles, side-mirror/bumper tells, plug shapes.
 - **What:** Expand the clue model the way PR #10 added "simplified vs traditional Chinese script." Add reusable, verifiable clues:
   - license-plate **formats/shapes** by country (EU white oval, US rectangle, JP ひらがな, etc.),
   - **road-marking standards** (US double-yellow centerline vs EU white),
@@ -87,6 +94,7 @@ Honest ceiling: for **text-less foreign street views** (no signs, no plates, no 
 
 1. Paths **1, 3, 7, 8** first — all Low/Medium, compound quickly, and 8 makes the rest measurable.
    → **1 done** (`script_route.py`, wired into `global_accuracy.sh` step 5),
+   → **3 partly done** (`ROAD_SIGNS.md` + corrected `driving_side.py`, 2026-11-12),
    → **driving-side eliminator done** (`driving_side.py`, part of 4),
    → **5 done** (`sun_hint.py`).
 2. Then **2** (proxy/paid reverse-image) to attack the missing spot-level.
