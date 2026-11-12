@@ -36,14 +36,16 @@ bias traps):
 First answer: <country> / <city-or-region>  (confidence: low|medium|high)
 Why: <one line, strongest visible clue>
 ```
-Allowed inputs for this glance: script, driving side, vegetation, plates,
-architecture, sun angle — nothing that needs a search or a crop. Write it to
-`FIRST_ANSWER.md` (or `board.py clue add --level guess`) so every later step
-has to beat it. Then the refinement loop classifies each new evidence item as
-confirms / refines / overturns (record what overturned it).
+Allowed inputs for this glance: script, driving side, **road-sign family and
+STOP wording**, vegetation, plates, architecture, sun angle — nothing that
+needs a search or a crop. `ROAD_SIGNS.md` is the deep-pass table for the sign
+clues; `FIRST_ANSWER.md` carries the 10-second heuristic menu. Write it down
+in `FIRST_ANSWER.md` (or `board.py clue add --level guess`) so every later
+step has to beat it. Then the refinement loop classifies each new evidence
+item as confirms / refines / overturns (record what overturned it).
 
 ### Step 0.5 — Cut the search space first (routing, `global_accuracy.sh` step 5)
-Before deep reading, apply the three cheap eliminators (output already in
+Before deep reading, apply the cheap eliminators (output already in
 `routing.json` / `sun_hint.json`):
 - **`script_route.py --ocr ocr_fine.json`** — writing system on any sign →
   candidate regions + the right OCR languages for a re-run (Cyrillic →
@@ -54,13 +56,24 @@ Before deep reading, apply the three cheap eliminators (output already in
   EXIF is trustworthy. No GPS? `sun_hint.py --manual` tells you what to measure.
 - **`driving_side.py --side left|right`** — once you can see which side traffic
   keeps to, this eliminates half the planet (LHT set: UK/IE/JP/IN/TH/ID/AU/NZ/KE/ZA…).
+  Can't see the wheel? `driving_side.py --how` lists 8 observable signals;
+  `--country <name>` checks one place (aliases like `UK`, `Swaziland` resolve).
+- **`ROAD_SIGNS.md`** — read the sign *family* before the text: warning-sign
+  shape (§1), STOP wording (§2), direction-board colour (§3), speed-limit shape
+  and mph/km-h numbers (§4), centre lines (§5), street plaques (§6). The
+  UK-vs-Ireland tie-break (§1a) is the cheapest way to split two left-driving,
+  English-speaking look-alikes.
 Never let a single one of these decide alone — combine two before committing.
+Signs encode **road class** as well as country (Germany alone uses blue,
+yellow, green, white and brown direction boards), so one board is not a
+country read.
 
 ### Step 1 — Read everything the prep produced
 `photo.jpg`, `intake/edges/*` (four edges + corners), `ocr_fine.json`,
 and **every** `rev_vars/*_baidu.json` vote + contact sheet. While reading,
 walk `VISION_CLUES.md` deliberately — script, driving side, plates, poles,
-road markings, architecture, vegetation, sun angle.
+road markings, architecture, vegetation, sun angle — then open `ROAD_SIGNS.md`
+for any sign, board, plaque or centre line in frame.
 
 ### Step 2 — Text first (highest precision per second)
 Any text at all — street plaque, shop sign, poster, phone number:

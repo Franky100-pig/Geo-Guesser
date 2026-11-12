@@ -13,8 +13,9 @@ before any search, before reading any engine output.
   "fish market"; the pin title said Inle Lake, Myanmar. Only the written
   first guess made the correction visible and trackable.)
 - **Cheap discriminators only.** A first answer may use script, driving side,
-  vegetation, plates, architecture — anything visible in 10 seconds. No
-  searches, no crops.
+  road-sign family / STOP wording, vegetation, plates, architecture — anything
+  visible in 10 seconds. No searches, no crops. Deep-pass sign table:
+  `ROAD_SIGNS.md`; how to read the side without a wheel: `driving_side.py --how`.
 - **Measurable.** Track first-answer accuracy separately from final accuracy;
   the gap tells you where the evidence pipeline actually adds value.
 
@@ -46,6 +47,10 @@ A first answer is an *impression → cluster*, not a country. Glance in this ord
 | Dry, adobe, Arabic script | flat roofs, desert | MENA / N.Africa |
 | Uniform poles + vending machines | many pole transformers, blue/white road studs | Japan |
 | French grid | arched crossarms | France + DOM-TOM |
+| Warning sign | red upright triangle | Vienna / continental Europe → MENA, parts of Africa/S.America |
+| Warning sign | yellow diamond | US/CA → AU/NZ/JP; **Ireland** if bilingual + km/h |
+| STOP sign | `ARRÊT` / `ALTO` / `止まれ` / `停` | Québec / Spanish Americas / Japan / mainland China |
+| Direction board | yellow with black text | Germany (Bundesstraße) |
 
 Each row narrows to a **cluster**; the refine pipeline (Step 1+) confirms which
 member. Full scan order, worked reads, and bias traps (Baidu China-lookalike
