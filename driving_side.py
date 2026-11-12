@@ -9,9 +9,10 @@ If you can tell which side traffic flows on (from a dashcam, the position of the
 driver's seat, or which side pedestrians/vehicles keep to), you instantly split
 the planet. This module is a static reference + an elimination helper.
 
-Data source: standard LHT/RHT country lists (kept as a compact set; ~70 LHT
-territories, the rest of the world is RHT). Used as a *narrowing* clue, not a
-proof — a handful of borders are ambiguous and some territories are exceptions.
+Data source: standard LHT/RHT country lists (a compact, non-exhaustive set of
+LHT territories; the rest of the world is RHT). Used as a *narrowing* clue,
+not a proof — a handful of borders are ambiguous and some territories are
+exceptions.
 
 Usage:
   python driving_side.py --side left        # we observed LEFT-hand traffic
@@ -24,25 +25,61 @@ import argparse
 import json
 
 # Territories that drive on the LEFT (LHT). Everything not listed is RHT.
+# Non-exhaustive: a few small dependencies are omitted (see NOTE below).
+# Corrected 2026-11-12 against RAC, drivingdirectionsandmaps.com, mapsofworld
+# and the 道路通行方向 survey — the previous set wrongly listed Belize,
+# Madagascar, Comoros and Vanuatu (all RHT) and repeated Lesotho.
 LEFT_DRIVE = {
     # Asia
-    "India", "Pakistan", "Bangladesh", "Nepal", "Bhutan", "Sri Lanka", "Maldives",
-    "Indonesia", "Thailand", "Malaysia", "Singapore", "Brunei", "East Timor",
-    "Japan", "Hong Kong", "Macau",
+    "Bangladesh", "Bhutan", "Brunei", "India", "Indonesia", "Japan",
+    "Malaysia", "Maldives", "Nepal", "Pakistan", "Singapore", "Sri Lanka",
+    "Thailand", "Timor-Leste", "Hong Kong (China)", "Macau (China)",
     # Oceania
     "Australia", "New Zealand", "Fiji", "Papua New Guinea", "Solomon Islands",
-    "Vanuatu", "Samoa", "Tonga", "Kiribati", "Tuvalu", "Nauru",
+    "Samoa", "Tonga", "Kiribati", "Tuvalu", "Nauru", "Cook Islands",
+    "Niue", "Tokelau", "Christmas Island", "Cocos (Keeling) Islands",
+    "Norfolk Island", "Pitcairn Islands",
     # Africa
-    "Kenya", "Tanzania", "Uganda", "South Africa", "Zimbabwe", "Botswana",
-    "Zambia", "Malawi", "Mozambique", "Lesotho", "Swaziland", "Namibia",
-    "Lesotho", "Seychelles", "Mauritius", "Madagascar", "Comoros",
+    "Botswana", "Kenya", "Lesotho", "Malawi", "Mauritius", "Mozambique",
+    "Namibia", "Seychelles", "South Africa", "Eswatini", "Tanzania",
+    "Uganda", "Zambia", "Zimbabwe",
     # Europe
-    "United Kingdom", "Ireland", "Cyprus", "Malta",
+    "United Kingdom", "Ireland", "Cyprus", "Malta", "Isle of Man",
+    "Jersey", "Guernsey", "Alderney",
     # Americas
-    "Guyana", "Suriname", "Jamaica", "Trinidad and Tobago", "Barbados",
-    "Bahamas", "Belize", "Antigua and Barbuda", "Dominica", "Grenada",
-    "Saint Lucia", "Saint Vincent", "Saint Kitts",
+    "Anguilla", "Antigua and Barbuda", "Bahamas", "Barbados", "Bermuda",
+    "British Virgin Islands", "Cayman Islands", "Dominica", "Falkland Islands",
+    "Grenada", "Guyana", "Jamaica", "Montserrat", "Saint Helena",
+    "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
+    "Suriname", "Trinidad and Tobago", "Turks and Caicos Islands",
+    "United States Virgin Islands",
 }
+
+# Spelling variants the agent may type / read off a map.
+ALIASES = {
+    "swaziland": "Eswatini",
+    "east timor": "Timor-Leste",
+    "timor leste": "Timor-Leste",
+    "hong kong": "Hong Kong (China)",
+    "macau": "Macau (China)",
+    "macao": "Macau (China)",
+    "uk": "United Kingdom",
+    "great britain": "United Kingdom",
+    "england": "United Kingdom",
+    "st kitts": "Saint Kitts and Nevis",
+    "st vincent": "Saint Vincent and the Grenadines",
+    "st lucia": "Saint Lucia",
+    "us virgin islands": "United States Virgin Islands",
+    "british virgin islands": "British Virgin Islands",
+}
+
+# Border / sovereignty cases where the surrounding country is NOT a guide.
+NEAR_BORDER_EXCEPTIONS = (
+    "Mainland China is RHT while Hong Kong (China) and Macau (China) are LHT; "
+    "the US is RHT while the US Virgin Islands are LHT; Gibraltar is RHT "
+    "although the UK is LHT; Okinawa switched back to LHT in 1978 and Samoa "
+    "switched to LHT in 2009 — old photos can show the other side."
+)
 
 
 def eliminate(side: str) -> dict:
