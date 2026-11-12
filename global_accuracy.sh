@@ -127,6 +127,9 @@ else
 fi
 echo "  driving side   : which side does traffic keep to? (UK/JP/IN/AU/ID/KE=LEFT; rest=RIGHT)"
 echo "                   -> python3 $SCRIPT_DIR/driving_side.py --side left|right   (eliminates half the planet)"
+echo "                   -> --how (8 ways to read it) | --country <name> (alias-aware lookup)"
+echo "  road signs     : warning-sign shape / STOP wording / direction-board colour"
+echo "                   -> $SCRIPT_DIR/ROAD_SIGNS.md  (deep-pass clue table)"
 
 cat <<'SOP'
 
@@ -138,8 +141,9 @@ cat <<'SOP'
   0. ROUTE : read routing.json (script -> candidate regions) + sun_hint.json
              (hemisphere/band) BEFORE deep reading; they cut the search space
              first, then driving_side.py --side <observed> eliminates further
+             (--how if the wheel is hidden) and ROAD_SIGNS.md reads the sign family
   1. READ  : photo.jpg, intake/edges/*, ocr_fine.json, each rev_vars/*_baidu.json
-             + consult VISION_CLUES.md while reading
+             + consult VISION_CLUES.md (quick pass) and ROAD_SIGNS.md (signs) while reading
   2. TEXT  : any text found? -> phone_lookup.py (numbers)
              -> WebSearch / Yandex-text (WebFetch) / revimg.py --query bing
   3. SOURCE: any URL / filename / watermark / EXIF hint?
