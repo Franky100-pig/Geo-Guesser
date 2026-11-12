@@ -135,7 +135,7 @@ prep 之后，最快的准确率杠杆通常是 `pin_title_mine.py .`（挖掘�
 | `pin_title_mine.py` | 挖掘百度反查源页（duitang/huaban/tuchong/699pic…）中的**地名**——单步产出最高（~30s）。 |
 | `phone_lookup.py` | **离线全球电话号码定位**（libphonenumber）。招牌上的号码零网络锁定国家 + 城市。 |
 | `script_route.py` | 文字系统 → **候选区域 + OCR 语言**（Unicode 区间，无依赖）。 |
-| `driving_side.py` | **左行/右行排除器**——约 75 个左行国家/地区 + 看不到方向盘时的目视判读方法。 |
+| `driving_side.py` | **左行/右行排除器**——修正后的约 75 个左行国家/地区；`--side` 排除、`--country <名称>` 查单个地点（支持别名）、`--how` 给出看不到方向盘时的 8 种判读方法。 |
 | `sun_hint.py` | 由 EXIF GPS+时间或实测影子方位做**半球/纬度带收窄**；包装 geo-sleuth 的 `sun.py`。 |
 | `sat_global.py` | 中国以外地区的全球卫星镶嵌图（ESRI/Google），支持 `GEO_PROXY`，`--dry-run` 可验证瓦片计算。 |
 | `amap_sat.py` | **高德**卫星镶嵌图，国内可达（已处理 WGS84→GCJ-02）。 |
@@ -148,6 +148,7 @@ prep 之后，最快的准确率杠杆通常是 `pin_title_mine.py .`（挖掘�
 | `FIRST_ANSWER.md` | 作答协议：~10s 内给出第一答案，再以可见的 confirms/refines/overturns 链修正。 |
 | `GLOBAL_ACCURACY_SOP.md` | 海外 agent 手册：引擎地图、步骤顺序（第一答案 → 路由 → 通读 → 文字 → 溯源 → 验证）、照片类型决策表。 |
 | `VISION_CLUES.md` | 系统化目视判读清单（文字、左右行、车牌、电线杆、建筑、植被…）+ 国内相似图偏置陷阱。 |
+| `ROAD_SIGNS.md` | **全球通道路标/标线深度判读库**：警告牌形状、STOP 用词、指路牌配色、限速牌形制与单位、中心线、街道名牌、路线编号盾牌；每条都标注强度与反例。 |
 | `GLOBAL_OPTIMIZATION.md` | 海外精度路线图：已实测死路 + 8 条按性价比排序的优化路径及状态。 |
 | `CHINA_NETWORK_NOTES.md` | 实测网络约束（国内什么可达）与 3 分钟工作流。 |
 | `TEST_REPORT_V3.md` | v3 海外盲测：4 张照片，国家 4/4、城市 3/4——每次命中靠的是什么。 |

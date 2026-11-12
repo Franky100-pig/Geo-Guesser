@@ -142,7 +142,7 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 | `pin_title_mine.py` | Mines baidu rev-search source pages (duitang/huaban/tuchong/699pic…) for **place names** — the highest-yield single step (~30s). |
 | `phone_lookup.py` | **Offline worldwide phone-number geolocation** (libphonenumber). Numbers on signs pin country + city with zero network. |
 | `script_route.py` | Writing system → **candidate regions + OCR languages** (Unicode ranges, no deps). |
-| `driving_side.py` | **LHT/RHT eliminator** — ~75 left-traffic territories + how to read the side when the wheel isn't visible. |
+| `driving_side.py` | **LHT/RHT eliminator** — ~75 corrected left-traffic territories; `--side` to eliminate, `--country <name>` for an alias-aware lookup, `--how` for 8 ways to read the side when the wheel isn't visible. |
 | `sun_hint.py` | **Hemisphere/latitude narrowing** from EXIF GPS+time or a measured shadow bearing; wraps geo-sleuth `sun.py`. |
 | `sat_global.py` | Global satellite mosaic (ESRI/Google) for outside China, `GEO_PROXY` support, `--dry-run` tile-math check. |
 | `amap_sat.py` | **AMap (Gaode)** satellite mosaic for China (reachable from CN; WGS84→GCJ-02 handled). |
@@ -155,6 +155,7 @@ Americas, so set `REGION` yourself after a 5-second look at the photo.
 | `FIRST_ANSWER.md` | Answering protocol: declare a first answer in ~10s, then refine with a visible confirms/refines/overturns chain. |
 | `GLOBAL_ACCURACY_SOP.md` | Overseas agent playbook: engine map, step order (first answer → routing → read → text → source → verify), photo-type decision table. |
 | `VISION_CLUES.md` | Systematic reading checklist (script, driving side, plates, poles, architecture, vegetation…) + the CN-lookalike bias trap. |
+| `ROAD_SIGNS.md` | **Road-sign & marking deep-pass library** for the global lane: warning-sign shape, STOP wording, direction-board colour, speed-limit shape/unit, centre lines, street plaques, route shields; each entry states strength + counterexamples. |
 | `GLOBAL_OPTIMIZATION.md` | Overseas accuracy roadmap: measured dead-ends, 8 ranked optimization paths with status. |
 | `CHINA_NETWORK_NOTES.md` | Measured network constraints (what's reachable from CN) and the 3-minute workflow. |
 | `TEST_REPORT_V3.md` | v3 overseas blind test: 4 photos, country 4/4, city 3/4 — what each hit relied on. |
